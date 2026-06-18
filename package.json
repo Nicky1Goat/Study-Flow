@@ -1,0 +1,16 @@
+{
+  "name": "plant-bloom",
+  "version": "1.0.0",
+  "description": "Plant Bloom — an AI-first plant-care web app. Scan a plant, get a health diagnosis and a personalized care plan.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "start": "node server.mjs",
+    "dev": "node build.mjs && node server.mjs"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-react": "^7.24.7"
+  }
+}
