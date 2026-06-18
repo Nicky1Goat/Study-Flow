@@ -1,0 +1,13 @@
+<svg width="220" height="48" viewBox="0 0 220 48" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Plant Bloom">
+  
+  <g transform="translate(2,2)">
+    <circle cx="22" cy="22" r="22" fill="#356048"></circle>
+    <path d="M22 34c0-7-4.6-11.4-11-12.2 0 6.7 4.3 11 11 12.2Z" fill="#9CC6AE"></path>
+    <path d="M22 34c0-9 4.8-14.4 12-15.2 0 8.6-5 14.2-12 15.2Z" fill="#E6F0E9"></path>
+    <path d="M22 35V20" stroke="#E6F0E9" stroke-width="2.2" stroke-linecap="round"></path>
+    <circle cx="22" cy="15.5" r="3.4" fill="#D6885E"></circle>
+  </g>
+  
+  <text x="58" y="31" font-family="Spectral, Georgia, serif" font-size="25" font-weight="500" letter-spacing="-0.4" fill="#1A1F1A">Plant</text>
+  <text x="124" y="31" font-family="Spectral, Georgia, serif" font-size="25" font-weight="500" letter-spacing="-0.4" fill="#356048">Bloom</text>
+</svg>

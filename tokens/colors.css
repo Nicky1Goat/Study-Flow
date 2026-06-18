@@ -1,0 +1,84 @@
+/* Plant Bloom — Color tokens
+   A warm botanical palette: deep canopy greens, a terracotta "bloom" accent,
+   and bone-white neutrals. Designed for calm, premium, editorial interfaces. */
+
+:root {
+  /* ---- Green (canopy) scale — primary brand hue ---- */
+  --green-950: #0E1C14;
+  --green-900: #14271C;
+  --green-800: #1D3829;
+  --green-700: #274C37;
+  --green-600: #356048; /* primary */
+  --green-500: #4C8662;
+  --green-400: #6FA886;
+  --green-300: #9CC6AE;
+  --green-200: #C8E0D2;
+  --green-100: #E6F0E9;
+  --green-50:  #F1F7F3;
+
+  /* ---- Bloom (terracotta) accent scale ---- */
+  --bloom-700: #A8542F;
+  --bloom-600: #C2683E;
+  --bloom-500: #D6885E; /* accent */
+  --bloom-400: #E4A480;
+  --bloom-300: #EFC2A6;
+  --bloom-200: #F6DCC9;
+  --bloom-100: #FBEDE2;
+
+  /* ---- Bone (warm neutral) scale ---- */
+  --bone-50:  #FBF9F3;
+  --bone-100: #F5F1E7;
+  --bone-200: #EAE4D5;
+  --bone-300: #D9D1BF;
+  --bone-400: #BDB39C;
+
+  /* ---- Ink (warm charcoal) scale ---- */
+  --ink-900: #1A1F1A;
+  --ink-800: #272D26;
+  --ink-700: #3A423A;
+  --ink-600: #545C53;
+  --ink-500: #6E766C;
+  --ink-400: #8C9388;
+
+  /* ---- Pure surfaces ---- */
+  --white: #FFFFFF;
+  --warm-white: #FFFEFB;
+
+  /* ---- Semantic status hues ---- */
+  --status-healthy: #4C8662;
+  --status-attention: #D6885E;
+  --status-critical: #B4452F;
+  --status-info: #3F6E8C;
+
+  /* ====== Semantic aliases ====== */
+  --surface-page: var(--bone-50);
+  --surface-card: var(--warm-white);
+  --surface-sunken: var(--bone-100);
+  --surface-inverse: var(--green-900);
+  --surface-accent-soft: var(--green-100);
+  --surface-bloom-soft: var(--bloom-100);
+
+  --text-primary: var(--ink-900);
+  --text-secondary: var(--ink-500);
+  --text-muted: var(--ink-400);
+  --text-on-dark: var(--bone-50);
+  --text-on-dark-muted: var(--green-300);
+  --text-accent: var(--green-700);
+  --text-bloom: var(--bloom-700);
+
+  --primary: var(--green-600);
+  --primary-strong: var(--green-700);
+  --primary-soft: var(--green-100);
+  --on-primary: var(--bone-50);
+
+  --accent: var(--bloom-500);
+  --accent-strong: var(--bloom-600);
+  --on-accent: var(--warm-white);
+
+  --border-subtle: var(--bone-200);
+  --border-default: var(--bone-300);
+  --border-strong: var(--ink-400);
+  --border-focus: var(--green-500);
+
+  --ring-focus: color-mix(in oklch, var(--green-500) 45%, transparent);
+}

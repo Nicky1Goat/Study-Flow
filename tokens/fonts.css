@@ -1,0 +1,7 @@
+/* Plant Bloom — Webfonts
+   NOTE: Loaded from Google Fonts CDN. For production, self-host these
+   binaries and replace the @import with local @font-face src: url(...) rules.
+   Substitution flag: no brand font files were provided, so these are
+   editorially-chosen Google Fonts (see readme.md › Visual Foundations). */
+
+@import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
