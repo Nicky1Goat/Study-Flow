@@ -371,7 +371,7 @@ function Sidebar({ path }) {
   const isActive = (k) => path===k || (k==='/garden' && path==='/');
   return (
     <aside className="pb-sidebar" style={{width:248,flex:'none',height:'100%',boxSizing:'border-box',background:'var(--surface-card)',borderRight:'1px solid var(--border-subtle)',display:'flex',flexDirection:'column',padding:'26px 18px'}}>
-      <div style={{display:'flex',alignItems:'center',padding:'0 8px 4px',cursor:'pointer'}} onClick={()=>navigate('/garden')}>
+      <div className="pb-logo" style={{display:'flex',alignItems:'center',padding:'0 8px 4px',cursor:'pointer'}} onClick={()=>navigate('/garden')}>
         <img src="assets/logo-full.svg" width="160" alt="Plant Bloom" />
       </div>
       <button className="pb-scanbtn" onClick={()=>navigate('/scan')} style={{display:'flex',alignItems:'center',gap:10,width:'100%',marginTop:26,padding:'12px 16px',borderRadius:'var(--radius-md)',border:'none',cursor:'pointer',background:'var(--accent)',color:'var(--on-accent)',boxShadow:'var(--shadow-bloom)',fontFamily:'var(--font-sans)',fontSize:15,fontWeight:600}}>
@@ -380,17 +380,17 @@ function Sidebar({ path }) {
       <nav className="pb-navwrap" style={{display:'flex',flexDirection:'column',gap:4,marginTop:26}}>
         {items.map(it=>{ const active=isActive(it.key); return (
           <button key={it.key} onClick={()=>navigate(it.key)} style={{display:'flex',alignItems:'center',gap:12,width:'100%',padding:'11px 14px',borderRadius:'var(--radius-md)',border:'none',cursor:'pointer',background:active?'var(--surface-accent-soft)':'transparent',color:active?'var(--text-accent)':'var(--text-secondary)',fontFamily:'var(--font-sans)',fontSize:15,fontWeight:active?600:500,textAlign:'left',transition:'all 140ms ease'}}>
-            <Icon name={it.icon} size={20} /> {it.label}
+            <Icon name={it.icon} size={20} /> <span className="pb-navlabel">{it.label}</span>
           </button>
         ); })}
       </nav>
       <div className="pb-foot" style={{marginTop:'auto',display:'flex',flexDirection:'column',gap:4}}>
         <button className="pb-settings" onClick={()=>navigate('/settings')} style={{display:'flex',alignItems:'center',gap:12,width:'100%',padding:'11px 14px',borderRadius:'var(--radius-md)',border:'none',cursor:'pointer',background:path==='/settings'?'var(--surface-accent-soft)':'transparent',color:path==='/settings'?'var(--text-accent)':'var(--text-secondary)',fontFamily:'var(--font-sans)',fontSize:15,fontWeight:path==='/settings'?600:500,textAlign:'left'}}>
-          <Icon name="settings" size={20} /> Settings
+          <Icon name="settings" size={20} /> <span className="pb-navlabel">Settings</span>
         </button>
-        <div style={{display:'flex',alignItems:'center',gap:11,padding:'10px 8px',marginTop:6,borderTop:'1px solid var(--border-subtle)'}}>
+        <div className="pb-userrow" style={{display:'flex',alignItems:'center',gap:11,padding:'10px 8px',marginTop:6,borderTop:'1px solid var(--border-subtle)'}}>
           <Avatar name={s.user.name} size="md" />
-          <div style={{minWidth:0}}>
+          <div className="pb-usermeta" style={{minWidth:0}}>
             <div style={{fontSize:14,fontWeight:600,color:'var(--text-primary)'}}>{s.user.name}</div>
             <div style={{fontSize:12,color:'var(--text-muted)'}}>{plantsCount} plant{plantsCount===1?'':'s'} · {s.settings.proInsights?'Pro':'Free'}</div>
           </div>
@@ -415,8 +415,8 @@ function GardenView() {
   const dateStr = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
 
   return (
-    <div style={{maxWidth:1080,margin:'0 auto',padding:'40px 48px 64px'}}>
-      <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',gap:24,flexWrap:'wrap'}}>
+    <div className="pb-page" style={{maxWidth:1080,margin:'0 auto',padding:'40px 48px 64px'}}>
+      <div className="pb-header" style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',gap:24,flexWrap:'wrap'}}>
         <div>
           <div className="pb-overline" style={{marginBottom:8}}>{dateStr}</div>
           <h1 style={{fontSize:38}}>Good {greeting()}, {s.user.name.split(' ')[0]}</h1>
@@ -426,7 +426,7 @@ function GardenView() {
               : <>Your garden is <span style={{color:'var(--text-accent)',fontWeight:600}}>mostly thriving</span> — {needAttention} plant{needAttention===1?'':'s'} need{needAttention===1?'s':''} attention today.</>}
           </p>
         </div>
-        <Button variant="bloom" icon={<Icon name="camera" size={18} />} onClick={()=>navigate('/scan')}>Scan a plant</Button>
+        <Button className="pb-cta" variant="bloom" icon={<Icon name="camera" size={18} />} onClick={()=>navigate('/scan')}>Scan a plant</Button>
       </div>
 
       <div className="pb-grid-3" style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:16,marginTop:28}}>
@@ -543,7 +543,7 @@ function ScanView() {
   const previewSrc = photo || SPECIES[0].photo;
 
   return (
-    <div style={{minHeight:'100%',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'48px'}}>
+    <div className="pb-scan-page" style={{minHeight:'100%',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'48px'}}>
       <div style={{textAlign:'center',maxWidth:540,marginBottom:30}}>
         <div className="pb-overline" style={{marginBottom:12,justifyContent:'center'}}>AI plant identifier</div>
         <h1 style={{fontSize:40,lineHeight:1.06}}>Point, scan, and we’ll do the rest</h1>
@@ -639,7 +639,7 @@ function ResultView() {
   const s = useStore();
   const d = s.pendingDiagnosis;
   if(!d) return (
-    <div style={{maxWidth:700,margin:'0 auto',padding:'80px 48px'}}>
+    <div className="pb-page" style={{maxWidth:700,margin:'0 auto',padding:'80px 48px'}}>
       <EmptyState icon="scan" title="No scan yet" body="Identify a plant to see its diagnosis and care plan here." cta={<Button variant="bloom" icon={<Icon name="camera" size={18}/>} onClick={()=>navigate('/scan')}>Scan a plant</Button>} />
     </div>
   );
@@ -655,14 +655,14 @@ function ResultView() {
   };
 
   return (
-    <div style={{maxWidth:1020,margin:'0 auto',padding:'28px 48px 64px'}}>
+    <div className="pb-page" style={{maxWidth:1020,margin:'0 auto',padding:'28px 48px 64px'}}>
       <button onClick={()=>navigate('/scan')} style={{display:'inline-flex',alignItems:'center',gap:7,background:'none',border:'none',cursor:'pointer',color:'var(--text-secondary)',fontFamily:'var(--font-sans)',fontSize:14,fontWeight:500,padding:'6px 0',marginBottom:14}}>
         <Icon name="arrowLeft" size={18} /> Scan another
       </button>
 
       <Card padding={0} elevation="lg" style={{overflow:'hidden'}}>
         <div className="pb-hero" style={{display:'grid',gridTemplateColumns:'380px 1fr'}}>
-          <div style={{position:'relative',background:'var(--green-100)',minHeight:280}}>
+          <div className="pb-hero-img" style={{position:'relative',background:'var(--green-100)',minHeight:280}}>
             <img src={d.photo} alt={d.name} style={{width:'100%',height:'100%',objectFit:'cover',display:'block',position:'absolute',inset:0}} />
             <div style={{position:'absolute',top:16,left:16}}>
               <span style={{display:'inline-flex',alignItems:'center',gap:7,padding:'7px 13px',borderRadius:999,background:'rgba(14,28,20,0.6)',backdropFilter:'blur(8px)',color:'#fff',fontFamily:'var(--font-mono)',fontSize:12}}>
@@ -670,7 +670,7 @@ function ResultView() {
               </span>
             </div>
           </div>
-          <div style={{padding:'30px 34px',display:'flex',flexDirection:'column'}}>
+          <div className="pb-hero-body" style={{padding:'30px 34px',display:'flex',flexDirection:'column'}}>
             <div className="pb-overline" style={{marginBottom:10}}>Identified</div>
             <h1 style={{fontSize:33,lineHeight:1.05}}>{d.name}</h1>
             <div style={{fontFamily:'var(--font-display)',fontStyle:'italic',fontSize:17,color:'var(--text-secondary)',marginTop:4}}>{d.common}</div>
@@ -734,13 +734,13 @@ function LibraryView() {
   const [q,setQ] = useState('');
   const list = s.plants.filter(p => (p.name+' '+(p.nickname||'')+' '+(p.room||'')).toLowerCase().includes(q.toLowerCase()));
   return (
-    <div style={{maxWidth:1080,margin:'0 auto',padding:'40px 48px 64px'}}>
-      <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',gap:24,marginBottom:26,flexWrap:'wrap'}}>
+    <div className="pb-page" style={{maxWidth:1080,margin:'0 auto',padding:'40px 48px 64px'}}>
+      <div className="pb-header" style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',gap:24,marginBottom:26,flexWrap:'wrap'}}>
         <div>
           <div className="pb-overline" style={{marginBottom:8}}>{s.plants.length} plant{s.plants.length===1?'':'s'}</div>
           <h1 style={{fontSize:36}}>Library</h1>
         </div>
-        <div style={{display:'flex',gap:12,alignItems:'center'}}>
+        <div className="pb-toolbar" style={{display:'flex',gap:12,alignItems:'center'}}>
           <div style={{width:260}}>
             <Input icon={<Icon name="search" size={18} />} placeholder="Search your garden" value={q} onChange={(e)=>setQ(e.target.value)} />
           </div>
@@ -767,7 +767,7 @@ function PlantView({ id }) {
   const [editing,setEditing] = useState(false);
   const [nick,setNick] = useState(raw?raw.nickname||'':'');
   if(!raw) return (
-    <div style={{maxWidth:700,margin:'0 auto',padding:'80px 48px'}}>
+    <div className="pb-page" style={{maxWidth:700,margin:'0 auto',padding:'80px 48px'}}>
       <EmptyState icon="leaf" title="Plant not found" body="It may have been removed from your garden." cta={<Button onClick={()=>navigate('/library')}>Back to library</Button>} />
     </div>
   );
@@ -780,18 +780,18 @@ function PlantView({ id }) {
   const confirmRemove = () => { if(window.confirm('Remove '+(raw.nickname||raw.name)+' from your garden?')){ removePlant(id); navigate('/library'); } };
 
   return (
-    <div style={{maxWidth:1020,margin:'0 auto',padding:'28px 48px 64px'}}>
+    <div className="pb-page" style={{maxWidth:1020,margin:'0 auto',padding:'28px 48px 64px'}}>
       <button onClick={()=>navigate('/library')} style={{display:'inline-flex',alignItems:'center',gap:7,background:'none',border:'none',cursor:'pointer',color:'var(--text-secondary)',fontFamily:'var(--font-sans)',fontSize:14,fontWeight:500,padding:'6px 0',marginBottom:14}}>
         <Icon name="arrowLeft" size={18} /> Back to library
       </button>
 
       <Card padding={0} elevation="lg" style={{overflow:'hidden'}}>
         <div className="pb-hero" style={{display:'grid',gridTemplateColumns:'380px 1fr'}}>
-          <div style={{position:'relative',background:'var(--green-100)',minHeight:300}}>
+          <div className="pb-hero-img" style={{position:'relative',background:'var(--green-100)',minHeight:300}}>
             <img src={p.photo} alt={p.name} style={{width:'100%',height:'100%',objectFit:'cover',display:'block',position:'absolute',inset:0}} />
             <div style={{position:'absolute',top:16,left:16}}><Badge tone={p.status} dot>{p.statusLabel}</Badge></div>
           </div>
-          <div style={{padding:'30px 34px',display:'flex',flexDirection:'column'}}>
+          <div className="pb-hero-body" style={{padding:'30px 34px',display:'flex',flexDirection:'column'}}>
             <div className="pb-overline" style={{marginBottom:10}}>In your garden · {p.room}</div>
             {editing ? (
               <div style={{display:'flex',gap:8,alignItems:'flex-end',maxWidth:320}}>
@@ -817,10 +817,10 @@ function PlantView({ id }) {
               </div>
             </div>
 
-            <div style={{display:'flex',gap:10,marginTop:'auto',paddingTop:24,flexWrap:'wrap'}}>
+            <div className="pb-actions" style={{display:'flex',gap:10,marginTop:'auto',paddingTop:24,flexWrap:'wrap'}}>
               <Button icon={<Icon name="droplet" size={18}/>} onClick={()=>waterPlant(id)}>Water now</Button>
               {p.pest && <Button variant="secondary" icon={<Icon name="check" size={18}/>} onClick={()=>treatPlant(id)}>Mark treated</Button>}
-              <Button variant="danger" icon={<Icon name="trash" size={18}/>} onClick={confirmRemove} style={{marginLeft:'auto'}}>Remove</Button>
+              <Button className="pb-spacer" variant="danger" icon={<Icon name="trash" size={18}/>} onClick={confirmRemove} style={{marginLeft:'auto'}}>Remove</Button>
             </div>
           </div>
         </div>
@@ -863,14 +863,14 @@ function SettingsView() {
     ['proInsights','Pro AI insights','Deeper diagnosis and seasonal forecasts'],
   ];
   return (
-    <div style={{maxWidth:680,margin:'0 auto',padding:'40px 48px'}}>
+    <div className="pb-page pb-page-narrow" style={{maxWidth:680,margin:'0 auto',padding:'40px 48px'}}>
       <h1 style={{fontSize:36,marginBottom:26}}>Settings</h1>
 
       <SectionHeading>Profile</SectionHeading>
       <Card padding={20} style={{marginBottom:28}}>
-        <div style={{display:'flex',gap:14,alignItems:'flex-end'}}>
+        <div className="pb-profilerow" style={{display:'flex',gap:14,alignItems:'flex-end'}}>
           <Avatar name={name||'?'} size="lg" />
-          <div style={{flex:1}}><Input label="Your name" value={name} onChange={(e)=>setName(e.target.value)} /></div>
+          <div className="pb-profilefield" style={{flex:1}}><Input label="Your name" value={name} onChange={(e)=>setName(e.target.value)} /></div>
           <Button onClick={()=>setUserName(name.trim()||'Friend')} disabled={!name.trim() || name===s.user.name}>Save</Button>
         </div>
       </Card>

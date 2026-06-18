@@ -1198,6 +1198,7 @@ function Sidebar({
       padding: '26px 18px'
     }
   }, /*#__PURE__*/React.createElement("div", {
+    className: "pb-logo",
     style: {
       display: 'flex',
       alignItems: 'center',
@@ -1265,7 +1266,9 @@ function Sidebar({
     }, /*#__PURE__*/React.createElement(Icon, {
       name: it.icon,
       size: 20
-    }), " ", it.label);
+    }), " ", /*#__PURE__*/React.createElement("span", {
+      className: "pb-navlabel"
+    }, it.label));
   })), /*#__PURE__*/React.createElement("div", {
     className: "pb-foot",
     style: {
@@ -1296,7 +1299,10 @@ function Sidebar({
   }, /*#__PURE__*/React.createElement(Icon, {
     name: "settings",
     size: 20
-  }), " Settings"), /*#__PURE__*/React.createElement("div", {
+  }), " ", /*#__PURE__*/React.createElement("span", {
+    className: "pb-navlabel"
+  }, "Settings")), /*#__PURE__*/React.createElement("div", {
+    className: "pb-userrow",
     style: {
       display: 'flex',
       alignItems: 'center',
@@ -1309,6 +1315,7 @@ function Sidebar({
     name: s.user.name,
     size: "md"
   }), /*#__PURE__*/React.createElement("div", {
+    className: "pb-usermeta",
     style: {
       minWidth: 0
     }
@@ -1344,12 +1351,14 @@ function GardenView() {
     day: 'numeric'
   });
   return /*#__PURE__*/React.createElement("div", {
+    className: "pb-page",
     style: {
       maxWidth: 1080,
       margin: '0 auto',
       padding: '40px 48px 64px'
     }
   }, /*#__PURE__*/React.createElement("div", {
+    className: "pb-header",
     style: {
       display: 'flex',
       alignItems: 'flex-end',
@@ -1383,6 +1392,7 @@ function GardenView() {
       fontWeight: 600
     }
   }, "mostly thriving"), " \u2014 ", needAttention, " plant", needAttention === 1 ? '' : 's', " need", needAttention === 1 ? 's' : '', " attention today."))), /*#__PURE__*/React.createElement(Button, {
+    className: "pb-cta",
     variant: "bloom",
     icon: /*#__PURE__*/React.createElement(Icon, {
       name: "camera",
@@ -1714,6 +1724,7 @@ function ScanView() {
   const useSample = () => beginScan(SPECIES[Math.floor(Math.random() * SPECIES.length)].photo);
   const previewSrc = photo || SPECIES[0].photo;
   return /*#__PURE__*/React.createElement("div", {
+    className: "pb-scan-page",
     style: {
       minHeight: '100%',
       display: 'flex',
@@ -2064,6 +2075,7 @@ function ResultView() {
   const s = useStore();
   const d = s.pendingDiagnosis;
   if (!d) return /*#__PURE__*/React.createElement("div", {
+    className: "pb-page",
     style: {
       maxWidth: 700,
       margin: '0 auto',
@@ -2104,6 +2116,7 @@ function ResultView() {
     navigate('/plant/' + id);
   };
   return /*#__PURE__*/React.createElement("div", {
+    className: "pb-page",
     style: {
       maxWidth: 1020,
       margin: '0 auto',
@@ -2141,6 +2154,7 @@ function ResultView() {
       gridTemplateColumns: '380px 1fr'
     }
   }, /*#__PURE__*/React.createElement("div", {
+    className: "pb-hero-img",
     style: {
       position: 'relative',
       background: 'var(--green-100)',
@@ -2181,6 +2195,7 @@ function ResultView() {
     size: 14,
     stroke: "var(--bloom-300)"
   }), " ", d.confidence, "% match"))), /*#__PURE__*/React.createElement("div", {
+    className: "pb-hero-body",
     style: {
       padding: '30px 34px',
       display: 'flex',
@@ -2381,12 +2396,14 @@ function LibraryView() {
   const [q, setQ] = useState('');
   const list = s.plants.filter(p => (p.name + ' ' + (p.nickname || '') + ' ' + (p.room || '')).toLowerCase().includes(q.toLowerCase()));
   return /*#__PURE__*/React.createElement("div", {
+    className: "pb-page",
     style: {
       maxWidth: 1080,
       margin: '0 auto',
       padding: '40px 48px 64px'
     }
   }, /*#__PURE__*/React.createElement("div", {
+    className: "pb-header",
     style: {
       display: 'flex',
       alignItems: 'flex-end',
@@ -2405,6 +2422,7 @@ function LibraryView() {
       fontSize: 36
     }
   }, "Library")), /*#__PURE__*/React.createElement("div", {
+    className: "pb-toolbar",
     style: {
       display: 'flex',
       gap: 12,
@@ -2471,6 +2489,7 @@ function PlantView({
   const [editing, setEditing] = useState(false);
   const [nick, setNick] = useState(raw ? raw.nickname || '' : '');
   if (!raw) return /*#__PURE__*/React.createElement("div", {
+    className: "pb-page",
     style: {
       maxWidth: 700,
       margin: '0 auto',
@@ -2499,6 +2518,7 @@ function PlantView({
     }
   };
   return /*#__PURE__*/React.createElement("div", {
+    className: "pb-page",
     style: {
       maxWidth: 1020,
       margin: '0 auto',
@@ -2536,6 +2556,7 @@ function PlantView({
       gridTemplateColumns: '380px 1fr'
     }
   }, /*#__PURE__*/React.createElement("div", {
+    className: "pb-hero-img",
     style: {
       position: 'relative',
       background: 'var(--green-100)',
@@ -2562,6 +2583,7 @@ function PlantView({
     tone: p.status,
     dot: true
   }, p.statusLabel))), /*#__PURE__*/React.createElement("div", {
+    className: "pb-hero-body",
     style: {
       padding: '30px 34px',
       display: 'flex',
@@ -2671,6 +2693,7 @@ function PlantView({
     label: "Light",
     value: p.light
   }))), /*#__PURE__*/React.createElement("div", {
+    className: "pb-actions",
     style: {
       display: 'flex',
       gap: 10,
@@ -2692,6 +2715,7 @@ function PlantView({
     }),
     onClick: () => treatPlant(id)
   }, "Mark treated"), /*#__PURE__*/React.createElement(Button, {
+    className: "pb-spacer",
     variant: "danger",
     icon: /*#__PURE__*/React.createElement(Icon, {
       name: "trash",
@@ -2784,6 +2808,7 @@ function SettingsView() {
   const [name, setName] = useState(s.user.name);
   const rows = [['waterReminders', 'Watering reminders', 'Push alerts when a plant is thirsty'], ['monthlyReport', 'Monthly health report', 'A summary of your garden every month'], ['proInsights', 'Pro AI insights', 'Deeper diagnosis and seasonal forecasts']];
   return /*#__PURE__*/React.createElement("div", {
+    className: "pb-page pb-page-narrow",
     style: {
       maxWidth: 680,
       margin: '0 auto',
@@ -2800,6 +2825,7 @@ function SettingsView() {
       marginBottom: 28
     }
   }, /*#__PURE__*/React.createElement("div", {
+    className: "pb-profilerow",
     style: {
       display: 'flex',
       gap: 14,
@@ -2809,6 +2835,7 @@ function SettingsView() {
     name: name || '?',
     size: "lg"
   }), /*#__PURE__*/React.createElement("div", {
+    className: "pb-profilefield",
     style: {
       flex: 1
     }
