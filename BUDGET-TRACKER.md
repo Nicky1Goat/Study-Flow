@@ -10,17 +10,22 @@ pipeline — live formulas, conditional formatting, KPI cards, and themed charts
 - `make_spec.py` — generates the spec (theme, tabs, formulas, charts).
 - `build_xlsx.py` — renders the spec into the `.xlsx` (needs `openpyxl`).
 
-## Tabs (8)
+## Tabs (14)
 1. **Cover** — branded welcome page with a tab guide.
 2. **How-to** — step-by-step setup instructions for the buyer.
 3. **Paycheck** — gross → deductions → take-home, with an annualized (×26) column.
 4. **Budget** — take-home split across categories, each as a % of pay, with a
    "Left to allocate" line that turns red if you over-budget.
-5. **Log** — all 26 bi-weekly paychecks; dates auto-fill, net flows in, savings accumulate.
-6. **Savings Goals** — targets, % complete with progress bars, and target dates.
-7. **Debt Payoff** — starting vs. current balances, % paid, APR heat-map, min payments.
-8. **Dashboard** — 8 KPI cards (income, savings rate, debt, goals) plus budget,
-   savings-growth, and goal-progress charts.
+5. **50-30-20** — needs/wants/savings split: target $ per paycheck vs. your plan, with a heat-map.
+6. **Bills** — monthly bill tracker / payment schedule; Paid vs. Unpaid auto-highlight.
+7. **Subscriptions** — recurring subscriptions with auto annual cost and category.
+8. **Log** — all 26 bi-weekly paychecks; dates auto-fill, net flows in, savings accumulate.
+9. **Savings Goals** — targets, % complete with progress bars, and target dates.
+10. **Sinking Funds** — monthly set-aside calculator (target ÷ months left to a date).
+11. **Debt Payoff** — starting vs. current balances, % paid, APR heat-map, min payments.
+12. **Net Worth** — assets − liabilities via SUMIF, with a live net-worth total.
+13. **Annual Overview** — the whole year on one page (income, savings, debt, net worth, savings rate).
+14. **Dashboard** — 12 KPI cards plus budget, savings-growth, goals, and 50/30/20 charts.
 
 Only the shaded input cells need the buyer — every total, percentage, and chart
 updates itself. All sample figures are placeholders.
