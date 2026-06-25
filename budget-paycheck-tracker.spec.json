@@ -1,121 +1,923 @@
 {
   "filename": "budget-paycheck-tracker.xlsx",
+  "theme": {
+    "accent": "4E9C9C",
+    "header_font": "FFFFFF",
+    "border": "CBDCDC",
+    "section_colors": [
+      "2E4A57",
+      "4E9C9C",
+      "3E7A82",
+      "5B9AA0",
+      "2E4A57"
+    ],
+    "body_tints": [
+      "EAF3F2",
+      "F0EBE1",
+      "E6F0F0",
+      "F5F1E8",
+      "EAF3F2"
+    ],
+    "chart_palette": [
+      "4E9C9C",
+      "A8D0D0",
+      "2E4A57",
+      "7FB8BE",
+      "6FA8AE",
+      "BFE0DE",
+      "3E7A82",
+      "8FC0C0"
+    ]
+  },
   "tabs": [
+    {
+      "name": "Cover",
+      "columns": [],
+      "hide_gridlines": true,
+      "row_height": 22,
+      "column_widths": {
+        "A": 3,
+        "B": 4,
+        "C": 24,
+        "D": 24,
+        "E": 24,
+        "F": 4
+      },
+      "fills": [
+        {
+          "range": "B2:E18",
+          "color": "F0EBE1"
+        }
+      ],
+      "section_bars": [
+        {
+          "range": "B3:E5",
+          "label": "BUDGET  BY  PAYCHECK",
+          "color": "2E4A57",
+          "font_color": "FFFFFF",
+          "size": 26,
+          "align": "center"
+        },
+        {
+          "range": "B6:E6",
+          "label": "Bi-Weekly Budget & Savings Tracker",
+          "color": "4E9C9C",
+          "font_color": "FFFFFF",
+          "size": 14,
+          "align": "center"
+        },
+        {
+          "range": "B8:E8",
+          "label": "WHAT'S  INSIDE",
+          "color": "3E7A82",
+          "font_color": "FFFFFF",
+          "size": 12,
+          "align": "left"
+        },
+        {
+          "range": "B9:E9",
+          "label": "   1  ·  Instructions   —   how to set everything up",
+          "color": "EAF3F2",
+          "font_color": "2E4A57",
+          "size": 11,
+          "align": "left"
+        },
+        {
+          "range": "B10:E10",
+          "label": "   2  ·  Paycheck   —   your gross pay → take-home",
+          "color": "F5F1E8",
+          "font_color": "2E4A57",
+          "size": 11,
+          "align": "left"
+        },
+        {
+          "range": "B11:E11",
+          "label": "   3  ·  Budget   —   give every dollar a job",
+          "color": "EAF3F2",
+          "font_color": "2E4A57",
+          "size": 11,
+          "align": "left"
+        },
+        {
+          "range": "B12:E12",
+          "label": "   4  ·  Paycheck Log   —   track all 26 paydays",
+          "color": "F5F1E8",
+          "font_color": "2E4A57",
+          "size": 11,
+          "align": "left"
+        },
+        {
+          "range": "B13:E13",
+          "label": "   5  ·  Savings Goals   —   hit every target",
+          "color": "EAF3F2",
+          "font_color": "2E4A57",
+          "size": 11,
+          "align": "left"
+        },
+        {
+          "range": "B14:E14",
+          "label": "   6  ·  Debt Payoff   —   watch balances shrink",
+          "color": "F5F1E8",
+          "font_color": "2E4A57",
+          "size": 11,
+          "align": "left"
+        },
+        {
+          "range": "B15:E15",
+          "label": "   7  ·  Dashboard   —   your money at a glance",
+          "color": "EAF3F2",
+          "font_color": "2E4A57",
+          "size": 11,
+          "align": "left"
+        },
+        {
+          "range": "B17:E17",
+          "label": "♡   Thank you for your purchase   ·   made with care",
+          "color": "4E9C9C",
+          "font_color": "FFFFFF",
+          "size": 12,
+          "align": "center"
+        }
+      ]
+    },
+    {
+      "name": "How-to",
+      "freeze": "A2",
+      "columns": [
+        {
+          "header": "Step",
+          "key": "step",
+          "width": 8
+        },
+        {
+          "header": "What to do",
+          "key": "txt",
+          "width": 92
+        }
+      ],
+      "rows": [
+        {
+          "step": "1",
+          "txt": "Paycheck tab: enter your gross pay and each deduction. Your take-home pay calculates itself."
+        },
+        {
+          "step": "2",
+          "txt": "Budget tab: set a Budgeted amount per category. Aim to keep 'Left to allocate' at 0."
+        },
+        {
+          "step": "3",
+          "txt": "Paycheck Log: each payday, type what you Spent. Saved and Cumulative saved fill in for you."
+        },
+        {
+          "step": "4",
+          "txt": "Savings Goals: set a Target for each goal. The progress bar fills as your Saved amount grows."
+        },
+        {
+          "step": "5",
+          "txt": "Debt Payoff: enter starting and current balances. Watch '% paid' and total debt move."
+        },
+        {
+          "step": "6",
+          "txt": "Dashboard: open it any time for your take-home, savings rate, debt, and charts."
+        },
+        {
+          "step": "7",
+          "txt": "Only the shaded input cells need you — every total, percentage, and chart updates automatically."
+        }
+      ],
+      "styles": {
+        "header": {
+          "bold": true,
+          "fill": "2E4A57",
+          "font_color": "FFFFFF"
+        },
+        "banding": {
+          "enabled": true,
+          "color": "EAF3F2"
+        }
+      }
+    },
     {
       "name": "Paycheck",
       "freeze": "A2",
       "columns": [
-        { "header": "Item", "key": "item", "width": 32 },
-        { "header": "Amount", "key": "amount", "width": 14, "number_format": "#,##0.00" }
+        {
+          "header": "Item",
+          "key": "item",
+          "width": 34
+        },
+        {
+          "header": "Per paycheck",
+          "key": "amount",
+          "width": 15,
+          "number_format": "#,##0.00"
+        },
+        {
+          "header": "Per year (×26)",
+          "key": "annual",
+          "width": 15,
+          "number_format": "#,##0.00"
+        }
       ],
       "rows": [
-        { "item": "Gross pay (per paycheck)", "amount": 2200 },
-        { "item": "Federal tax", "amount": 264 },
-        { "item": "State tax", "amount": 88 },
-        { "item": "FICA (Social Security + Medicare)", "amount": 168 },
-        { "item": "Health insurance", "amount": 95 },
-        { "item": "401(k) retirement", "amount": 132 },
-        { "item": "Total deductions" },
-        { "item": "Take-home pay (net)" }
+        {
+          "item": "Gross pay",
+          "amount": 2200
+        },
+        {
+          "item": "Federal tax",
+          "amount": 264
+        },
+        {
+          "item": "State tax",
+          "amount": 88
+        },
+        {
+          "item": "FICA (Social Security + Medicare)",
+          "amount": 168
+        },
+        {
+          "item": "Health insurance",
+          "amount": 95
+        },
+        {
+          "item": "401(k) retirement",
+          "amount": 132
+        },
+        {
+          "item": "Total deductions"
+        },
+        {
+          "item": "Take-home pay (net)"
+        }
       ],
       "formulas": [
-        { "cell": "B8", "formula": "=SUM(B3:B7)", "number_format": "#,##0.00" },
-        { "cell": "B9", "formula": "=B2-B8", "number_format": "#,##0.00" }
+        {
+          "cell": "B8",
+          "formula": "=SUM(B3:B7)",
+          "number_format": "#,##0.00"
+        },
+        {
+          "cell": "B9",
+          "formula": "=B2-B8",
+          "number_format": "#,##0.00"
+        },
+        {
+          "col": "C",
+          "range_rows": [
+            2,
+            9
+          ],
+          "formula": "=B{row}*26",
+          "number_format": "#,##0.00"
+        }
       ],
       "styles": {
-        "header": { "bold": true, "fill": "2E5E4E", "font_color": "FFFFFF" },
-        "banding": { "enabled": true, "color": "ECF3F1" }
+        "header": {
+          "bold": true,
+          "fill": "2E4A57",
+          "font_color": "FFFFFF"
+        },
+        "banding": {
+          "enabled": true,
+          "color": "EAF3F2"
+        }
       }
     },
     {
       "name": "Budget",
       "freeze": "A2",
       "columns": [
-        { "header": "Category", "key": "cat", "width": 26 },
-        { "header": "Budgeted", "key": "amount", "width": 14, "number_format": "#,##0.00" },
-        { "header": "% of take-home", "key": "pct", "width": 15, "number_format": "0.0%" }
+        {
+          "header": "Category",
+          "key": "cat",
+          "width": 26
+        },
+        {
+          "header": "Budgeted",
+          "key": "amount",
+          "width": 14,
+          "number_format": "#,##0.00"
+        },
+        {
+          "header": "% of take-home",
+          "key": "pct",
+          "width": 16,
+          "number_format": "0.0%"
+        }
       ],
       "rows": [
-        { "cat": "Rent / housing", "amount": 600 },
-        { "cat": "Utilities", "amount": 90 },
-        { "cat": "Groceries", "amount": 220 },
-        { "cat": "Transportation / gas", "amount": 100 },
-        { "cat": "Phone + internet", "amount": 60 },
-        { "cat": "Subscriptions", "amount": 30 },
-        { "cat": "Debt payment", "amount": 100 },
-        { "cat": "Savings", "amount": 150 },
-        { "cat": "Fun / dining out", "amount": 60 },
-        { "cat": "Miscellaneous", "amount": 43 },
-        { "cat": "Total budgeted" },
-        { "cat": "Take-home pay (net)" },
-        { "cat": "Left to allocate" }
+        {
+          "cat": "Rent / housing",
+          "amount": 600
+        },
+        {
+          "cat": "Utilities",
+          "amount": 90
+        },
+        {
+          "cat": "Groceries",
+          "amount": 220
+        },
+        {
+          "cat": "Transportation / gas",
+          "amount": 100
+        },
+        {
+          "cat": "Phone + internet",
+          "amount": 60
+        },
+        {
+          "cat": "Subscriptions",
+          "amount": 30
+        },
+        {
+          "cat": "Debt payment",
+          "amount": 100
+        },
+        {
+          "cat": "Savings",
+          "amount": 150
+        },
+        {
+          "cat": "Fun / dining out",
+          "amount": 60
+        },
+        {
+          "cat": "Miscellaneous",
+          "amount": 43
+        },
+        {
+          "cat": "Total budgeted"
+        },
+        {
+          "cat": "Take-home pay (net)"
+        },
+        {
+          "cat": "Left to allocate"
+        }
       ],
       "formulas": [
-        { "cell": "B12", "formula": "=SUM(B2:B11)", "number_format": "#,##0.00" },
-        { "cell": "B13", "formula": "=Paycheck!B9", "number_format": "#,##0.00" },
-        { "cell": "B14", "formula": "=B13-B12", "number_format": "#,##0.00" },
-        { "col": "C", "range_rows": [2, 12], "formula": "=IF($B$13=0,0,B{row}/$B$13)", "number_format": "0.0%" }
+        {
+          "cell": "B12",
+          "formula": "=SUM(B2:B11)",
+          "number_format": "#,##0.00"
+        },
+        {
+          "cell": "B13",
+          "formula": "=Paycheck!B9",
+          "number_format": "#,##0.00"
+        },
+        {
+          "cell": "B14",
+          "formula": "=B13-B12",
+          "number_format": "#,##0.00"
+        },
+        {
+          "col": "C",
+          "range_rows": [
+            2,
+            12
+          ],
+          "formula": "=IF($B$13=0,0,B{row}/$B$13)",
+          "number_format": "0.0%"
+        }
       ],
       "conditional_formats": [
-        { "range": "C2:C11", "type": "data_bar", "color": "7ED2B6" },
-        { "range": "B14", "type": "cell_is", "operator": "lessThan", "formula": ["0"], "fill": "FFC7CE" }
+        {
+          "range": "C2:C11",
+          "type": "data_bar",
+          "color": "4E9C9C"
+        },
+        {
+          "range": "B14",
+          "type": "cell_is",
+          "operator": "lessThan",
+          "formula": [
+            "0"
+          ],
+          "fill": "F4B7B7"
+        }
       ],
       "styles": {
-        "header": { "bold": true, "fill": "2E5E4E", "font_color": "FFFFFF" },
-        "banding": { "enabled": true, "color": "ECF3F1" }
+        "header": {
+          "bold": true,
+          "fill": "2E4A57",
+          "font_color": "FFFFFF"
+        },
+        "banding": {
+          "enabled": true,
+          "color": "EAF3F2"
+        }
       }
     },
     {
       "name": "Log",
       "freeze": "A2",
       "columns": [
-        { "header": "#", "key": "num", "width": 5 },
-        { "header": "Pay date", "key": "date", "width": 15, "number_format": "d\" \"mmm\" \"yyyy" },
-        { "header": "Net pay", "key": "net", "width": 12, "number_format": "#,##0.00" },
-        { "header": "Spent", "key": "spent", "width": 12, "number_format": "#,##0.00" },
-        { "header": "Saved", "key": "saved", "width": 12, "number_format": "#,##0.00" },
-        { "header": "Cumulative saved", "key": "cum", "width": 17, "number_format": "#,##0.00" }
+        {
+          "header": "#",
+          "key": "num",
+          "width": 5
+        },
+        {
+          "header": "Pay date",
+          "key": "date",
+          "width": 15,
+          "number_format": "d\" \"mmm\" \"yyyy"
+        },
+        {
+          "header": "Net pay",
+          "key": "net",
+          "width": 12,
+          "number_format": "#,##0.00"
+        },
+        {
+          "header": "Spent",
+          "key": "spent",
+          "width": 12,
+          "number_format": "#,##0.00"
+        },
+        {
+          "header": "Saved",
+          "key": "saved",
+          "width": 12,
+          "number_format": "#,##0.00"
+        },
+        {
+          "header": "Cumulative saved",
+          "key": "cum",
+          "width": 17,
+          "number_format": "#,##0.00"
+        }
       ],
       "rows": [
-        { "num": 1, "spent": 1303 },
-        { "num": 2, "spent": 1303 },
-        { "num": 3, "spent": 1303 },
-        { "num": 4, "spent": 1303 },
-        { "num": 5, "spent": 1303 },
-        { "num": 6, "spent": 1303 },
-        { "num": 7, "spent": 1303 },
-        { "num": 8, "spent": 1303 },
-        { "num": 9, "spent": 1303 },
-        { "num": 10, "spent": 1303 },
-        { "num": 11, "spent": 1303 },
-        { "num": 12, "spent": 1303 },
-        { "num": 13, "spent": 1303 },
-        { "num": 14, "spent": 1303 },
-        { "num": 15, "spent": 1303 },
-        { "num": 16, "spent": 1303 },
-        { "num": 17, "spent": 1303 },
-        { "num": 18, "spent": 1303 },
-        { "num": 19, "spent": 1303 },
-        { "num": 20, "spent": 1303 },
-        { "num": 21, "spent": 1303 },
-        { "num": 22, "spent": 1303 },
-        { "num": 23, "spent": 1303 },
-        { "num": 24, "spent": 1303 },
-        { "num": 25, "spent": 1303 },
-        { "num": 26, "spent": 1303 }
+        {
+          "num": 1,
+          "spent": 1303
+        },
+        {
+          "num": 2,
+          "spent": 1303
+        },
+        {
+          "num": 3,
+          "spent": 1303
+        },
+        {
+          "num": 4,
+          "spent": 1303
+        },
+        {
+          "num": 5,
+          "spent": 1303
+        },
+        {
+          "num": 6,
+          "spent": 1303
+        },
+        {
+          "num": 7,
+          "spent": 1303
+        },
+        {
+          "num": 8,
+          "spent": 1303
+        },
+        {
+          "num": 9,
+          "spent": 1303
+        },
+        {
+          "num": 10,
+          "spent": 1303
+        },
+        {
+          "num": 11,
+          "spent": 1303
+        },
+        {
+          "num": 12,
+          "spent": 1303
+        },
+        {
+          "num": 13,
+          "spent": 1303
+        },
+        {
+          "num": 14,
+          "spent": 1303
+        },
+        {
+          "num": 15,
+          "spent": 1303
+        },
+        {
+          "num": 16,
+          "spent": 1303
+        },
+        {
+          "num": 17,
+          "spent": 1303
+        },
+        {
+          "num": 18,
+          "spent": 1303
+        },
+        {
+          "num": 19,
+          "spent": 1303
+        },
+        {
+          "num": 20,
+          "spent": 1303
+        },
+        {
+          "num": 21,
+          "spent": 1303
+        },
+        {
+          "num": 22,
+          "spent": 1303
+        },
+        {
+          "num": 23,
+          "spent": 1303
+        },
+        {
+          "num": 24,
+          "spent": 1303
+        },
+        {
+          "num": 25,
+          "spent": 1303
+        },
+        {
+          "num": 26,
+          "spent": 1303
+        }
       ],
       "formulas": [
-        { "col": "B", "range_rows": [2, 27], "formula": "=DATE(2026,1,2)+14*({row}-2)", "number_format": "d\" \"mmm\" \"yyyy" },
-        { "col": "C", "range_rows": [2, 27], "formula": "=Paycheck!$B$9", "number_format": "#,##0.00" },
-        { "col": "E", "range_rows": [2, 27], "formula": "=C{row}-D{row}", "number_format": "#,##0.00" },
-        { "col": "F", "range_rows": [2, 27], "formula": "=SUM($E$2:E{row})", "number_format": "#,##0.00" }
+        {
+          "col": "B",
+          "range_rows": [
+            2,
+            27
+          ],
+          "formula": "=DATE(2026,1,2)+14*({row}-2)",
+          "number_format": "d\" \"mmm\" \"yyyy"
+        },
+        {
+          "col": "C",
+          "range_rows": [
+            2,
+            27
+          ],
+          "formula": "=Paycheck!$B$9",
+          "number_format": "#,##0.00"
+        },
+        {
+          "col": "E",
+          "range_rows": [
+            2,
+            27
+          ],
+          "formula": "=C{row}-D{row}",
+          "number_format": "#,##0.00"
+        },
+        {
+          "col": "F",
+          "range_rows": [
+            2,
+            27
+          ],
+          "formula": "=SUM($E$2:E{row})",
+          "number_format": "#,##0.00"
+        }
       ],
       "conditional_formats": [
-        { "range": "F2:F27", "type": "color_scale", "min_color": "FDFBF3", "mid_color": "99E4EB", "max_color": "7ED2B6" }
+        {
+          "range": "F2:F27",
+          "type": "color_scale",
+          "min_color": "F0EBE1",
+          "mid_color": "A8D0D0",
+          "max_color": "4E9C9C"
+        }
       ],
       "styles": {
-        "header": { "bold": true, "fill": "2E5E4E", "font_color": "FFFFFF" },
-        "banding": { "enabled": true, "color": "ECF3F1" }
+        "header": {
+          "bold": true,
+          "fill": "2E4A57",
+          "font_color": "FFFFFF"
+        },
+        "banding": {
+          "enabled": true,
+          "color": "EAF3F2"
+        }
+      }
+    },
+    {
+      "name": "Savings Goals",
+      "freeze": "A2",
+      "columns": [
+        {
+          "header": "Goal",
+          "key": "goal",
+          "width": 22
+        },
+        {
+          "header": "Target",
+          "key": "target",
+          "width": 13,
+          "number_format": "#,##0.00"
+        },
+        {
+          "header": "Saved",
+          "key": "saved",
+          "width": 13,
+          "number_format": "#,##0.00"
+        },
+        {
+          "header": "Remaining",
+          "key": "rem",
+          "width": 13,
+          "number_format": "#,##0.00"
+        },
+        {
+          "header": "% Complete",
+          "key": "pct",
+          "width": 12,
+          "number_format": "0.0%"
+        },
+        {
+          "header": "Target date",
+          "key": "date",
+          "width": 14,
+          "number_format": "d\" \"mmm\" \"yyyy"
+        }
+      ],
+      "rows": [
+        {
+          "goal": "Emergency fund",
+          "target": 5000,
+          "saved": 1500
+        },
+        {
+          "goal": "Vacation",
+          "target": 2500,
+          "saved": 800
+        },
+        {
+          "goal": "New car fund",
+          "target": 8000,
+          "saved": 2200
+        },
+        {
+          "goal": "Holiday gifts",
+          "target": 1200,
+          "saved": 300
+        },
+        {
+          "goal": "Home down payment",
+          "target": 20000,
+          "saved": 4500
+        },
+        {
+          "goal": "Total"
+        }
+      ],
+      "formulas": [
+        {
+          "col": "D",
+          "range_rows": [
+            2,
+            6
+          ],
+          "formula": "=MAX(B{row}-C{row},0)",
+          "number_format": "#,##0.00"
+        },
+        {
+          "col": "E",
+          "range_rows": [
+            2,
+            6
+          ],
+          "formula": "=IF(B{row}=0,0,C{row}/B{row})",
+          "number_format": "0.0%"
+        },
+        {
+          "cell": "F2",
+          "formula": "=DATE(2026,12,31)",
+          "number_format": "d\" \"mmm\" \"yyyy"
+        },
+        {
+          "cell": "F3",
+          "formula": "=DATE(2026,8,15)",
+          "number_format": "d\" \"mmm\" \"yyyy"
+        },
+        {
+          "cell": "F4",
+          "formula": "=DATE(2027,6,1)",
+          "number_format": "d\" \"mmm\" \"yyyy"
+        },
+        {
+          "cell": "F5",
+          "formula": "=DATE(2026,12,1)",
+          "number_format": "d\" \"mmm\" \"yyyy"
+        },
+        {
+          "cell": "F6",
+          "formula": "=DATE(2028,1,1)",
+          "number_format": "d\" \"mmm\" \"yyyy"
+        },
+        {
+          "cell": "B7",
+          "formula": "=SUM(B2:B6)",
+          "number_format": "#,##0.00"
+        },
+        {
+          "cell": "C7",
+          "formula": "=SUM(C2:C6)",
+          "number_format": "#,##0.00"
+        },
+        {
+          "cell": "D7",
+          "formula": "=SUM(D2:D6)",
+          "number_format": "#,##0.00"
+        },
+        {
+          "cell": "E7",
+          "formula": "=IF(B7=0,0,C7/B7)",
+          "number_format": "0.0%"
+        }
+      ],
+      "conditional_formats": [
+        {
+          "range": "E2:E6",
+          "type": "data_bar",
+          "color": "4E9C9C"
+        }
+      ],
+      "styles": {
+        "header": {
+          "bold": true,
+          "fill": "2E4A57",
+          "font_color": "FFFFFF"
+        },
+        "banding": {
+          "enabled": true,
+          "color": "EAF3F2"
+        }
+      }
+    },
+    {
+      "name": "Debt Payoff",
+      "freeze": "A2",
+      "columns": [
+        {
+          "header": "Debt",
+          "key": "debt",
+          "width": 20
+        },
+        {
+          "header": "Starting balance",
+          "key": "start",
+          "width": 16,
+          "number_format": "#,##0.00"
+        },
+        {
+          "header": "Current balance",
+          "key": "cur",
+          "width": 16,
+          "number_format": "#,##0.00"
+        },
+        {
+          "header": "Paid off",
+          "key": "paid",
+          "width": 13,
+          "number_format": "#,##0.00"
+        },
+        {
+          "header": "% paid",
+          "key": "pct",
+          "width": 10,
+          "number_format": "0.0%"
+        },
+        {
+          "header": "APR",
+          "key": "apr",
+          "width": 9,
+          "number_format": "0.00%"
+        },
+        {
+          "header": "Min payment",
+          "key": "min",
+          "width": 13,
+          "number_format": "#,##0.00"
+        }
+      ],
+      "rows": [
+        {
+          "debt": "Credit card",
+          "start": 4200,
+          "cur": 3100,
+          "apr": 0.1999,
+          "min": 120
+        },
+        {
+          "debt": "Car loan",
+          "start": 18000,
+          "cur": 11500,
+          "apr": 0.0549,
+          "min": 340
+        },
+        {
+          "debt": "Student loan",
+          "start": 24000,
+          "cur": 15800,
+          "apr": 0.045,
+          "min": 210
+        },
+        {
+          "debt": "Personal loan",
+          "start": 6000,
+          "cur": 2400,
+          "apr": 0.11,
+          "min": 180
+        },
+        {
+          "debt": "Total"
+        }
+      ],
+      "formulas": [
+        {
+          "col": "D",
+          "range_rows": [
+            2,
+            5
+          ],
+          "formula": "=B{row}-C{row}",
+          "number_format": "#,##0.00"
+        },
+        {
+          "col": "E",
+          "range_rows": [
+            2,
+            5
+          ],
+          "formula": "=IF(B{row}=0,0,D{row}/B{row})",
+          "number_format": "0.0%"
+        },
+        {
+          "cell": "B6",
+          "formula": "=SUM(B2:B5)",
+          "number_format": "#,##0.00"
+        },
+        {
+          "cell": "C6",
+          "formula": "=SUM(C2:C5)",
+          "number_format": "#,##0.00"
+        },
+        {
+          "cell": "D6",
+          "formula": "=SUM(D2:D5)",
+          "number_format": "#,##0.00"
+        },
+        {
+          "cell": "E6",
+          "formula": "=IF(B6=0,0,D6/B6)",
+          "number_format": "0.0%"
+        },
+        {
+          "cell": "G6",
+          "formula": "=SUM(G2:G5)",
+          "number_format": "#,##0.00"
+        }
+      ],
+      "conditional_formats": [
+        {
+          "range": "E2:E5",
+          "type": "data_bar",
+          "color": "4E9C9C"
+        },
+        {
+          "range": "F2:F5",
+          "type": "color_scale",
+          "min_color": "7ED2B6",
+          "mid_color": "F6E5A8",
+          "max_color": "E8A6A6"
+        }
+      ],
+      "styles": {
+        "header": {
+          "bold": true,
+          "fill": "2E4A57",
+          "font_color": "FFFFFF"
+        },
+        "banding": {
+          "enabled": true,
+          "color": "EAF3F2"
+        }
       }
     },
     {
@@ -123,23 +925,205 @@
       "columns": [],
       "hide_gridlines": true,
       "row_height": 18,
-      "column_widths": { "A": 3, "B": 3.1, "C": 18, "D": 3.1, "E": 18, "F": 3.1, "G": 18, "H": 3 },
-      "section_bars": [
-        { "range": "B2:G2", "label": "P A Y C H E C K   O V E R V I E W", "font_color": "5A4A42" },
-        { "range": "B8:G8", "label": "B U D G E T   B Y   C A T E G O R Y", "font_color": "5A4A42" },
-        { "range": "B23:G23", "label": "C U M U L A T I V E   S A V I N G S   ·   26   P A Y C H E C K S", "font_color": "5A4A42" }
-      ],
+      "column_widths": {
+        "A": 3,
+        "B": 3,
+        "C": 17,
+        "D": 3,
+        "E": 17,
+        "F": 3,
+        "G": 17,
+        "H": 3,
+        "I": 17,
+        "J": 3
+      },
       "fills": [
-        { "range": "B3:G6", "color": "FDFBF3" }
+        {
+          "range": "C3:I8",
+          "color": "F5F1E8"
+        }
+      ],
+      "section_bars": [
+        {
+          "range": "C2:I2",
+          "label": "M O N E Y   A T   A   G L A N C E",
+          "color": "2E4A57",
+          "font_color": "FFFFFF",
+          "size": 12,
+          "align": "center"
+        },
+        {
+          "range": "C10:I10",
+          "label": "B U D G E T   B Y   C A T E G O R Y",
+          "color": "4E9C9C",
+          "font_color": "FFFFFF",
+          "size": 11,
+          "align": "center"
+        },
+        {
+          "range": "C26:I26",
+          "label": "S A V I N G S   G R O W T H   ·   26   P A Y C H E C K S",
+          "color": "3E7A82",
+          "font_color": "FFFFFF",
+          "size": 11,
+          "align": "center"
+        },
+        {
+          "range": "C42:I42",
+          "label": "G O A L S   ·   T A R G E T   vs   S A V E D",
+          "color": "5B9AA0",
+          "font_color": "FFFFFF",
+          "size": 11,
+          "align": "center"
+        }
       ],
       "kpi_cards": [
-        { "anchor": "B4", "span": [2, 2], "label": "Take-home / paycheck", "value": "=Paycheck!B9", "number_format": "#,##0.00", "fill": "7ED2B6", "font_color": "2E4A3F", "value_size": 22, "border": true },
-        { "anchor": "D4", "span": [2, 2], "label": "Saved per year", "value": "=SUM(Log!E2:E27)", "number_format": "#,##0.00", "fill": "80D2DA", "font_color": "2E4A3F", "value_size": 22, "border": true },
-        { "anchor": "F4", "span": [2, 2], "label": "Savings rate", "value": "=IF(SUM(Log!C2:C27)=0,0,SUM(Log!E2:E27)/SUM(Log!C2:C27))", "number_format": "0.0%", "fill": "B9A4E7", "font_color": "2E2A40", "value_size": 22, "border": true }
+        {
+          "anchor": "C4",
+          "span": [
+            2,
+            1
+          ],
+          "label": "Take-home / paycheck",
+          "value": "=Paycheck!B9",
+          "number_format": "#,##0.00",
+          "fill": "4E9C9C",
+          "font_color": "FFFFFF",
+          "label_size": 9,
+          "value_size": 16,
+          "border": true
+        },
+        {
+          "anchor": "E4",
+          "span": [
+            2,
+            1
+          ],
+          "label": "Avg monthly income",
+          "value": "=Paycheck!B9*26/12",
+          "number_format": "#,##0.00",
+          "fill": "2E4A57",
+          "font_color": "FFFFFF",
+          "label_size": 9,
+          "value_size": 16,
+          "border": true
+        },
+        {
+          "anchor": "G4",
+          "span": [
+            2,
+            1
+          ],
+          "label": "Saved / year",
+          "value": "=SUM(Log!E2:E27)",
+          "number_format": "#,##0.00",
+          "fill": "3E7A82",
+          "font_color": "FFFFFF",
+          "label_size": 9,
+          "value_size": 16,
+          "border": true
+        },
+        {
+          "anchor": "I4",
+          "span": [
+            2,
+            1
+          ],
+          "label": "Savings rate",
+          "value": "=IF(SUM(Log!C2:C27)=0,0,SUM(Log!E2:E27)/SUM(Log!C2:C27))",
+          "number_format": "0.0%",
+          "fill": "2E4A57",
+          "font_color": "FFFFFF",
+          "label_size": 9,
+          "value_size": 16,
+          "border": true
+        },
+        {
+          "anchor": "C7",
+          "span": [
+            2,
+            1
+          ],
+          "label": "Total saved (goals)",
+          "value": "=SUM('Savings Goals'!C2:C6)",
+          "number_format": "#,##0.00",
+          "fill": "2E4A57",
+          "font_color": "FFFFFF",
+          "label_size": 9,
+          "value_size": 16,
+          "border": true
+        },
+        {
+          "anchor": "E7",
+          "span": [
+            2,
+            1
+          ],
+          "label": "Goals progress",
+          "value": "=IF(SUM('Savings Goals'!B2:B6)=0,0,SUM('Savings Goals'!C2:C6)/SUM('Savings Goals'!B2:B6))",
+          "number_format": "0.0%",
+          "fill": "3E7A82",
+          "font_color": "FFFFFF",
+          "label_size": 9,
+          "value_size": 16,
+          "border": true
+        },
+        {
+          "anchor": "G7",
+          "span": [
+            2,
+            1
+          ],
+          "label": "Total debt left",
+          "value": "=SUM('Debt Payoff'!C2:C5)",
+          "number_format": "#,##0.00",
+          "fill": "4E9C9C",
+          "font_color": "FFFFFF",
+          "label_size": 9,
+          "value_size": 16,
+          "border": true
+        },
+        {
+          "anchor": "I7",
+          "span": [
+            2,
+            1
+          ],
+          "label": "Debt paid off",
+          "value": "=SUM('Debt Payoff'!D2:D5)",
+          "number_format": "#,##0.00",
+          "fill": "2E4A57",
+          "font_color": "FFFFFF",
+          "label_size": 9,
+          "value_size": 16,
+          "border": true
+        }
       ],
       "charts": [
-        { "type": "bar", "anchor": "B9", "data": "Budget!B1:B11", "categories": "Budget!A2:A11", "width": 16, "height": 8 },
-        { "type": "line", "anchor": "B24", "data": "Log!F1:F27", "categories": "Log!B2:B27", "width": 16, "height": 8 }
+        {
+          "type": "bar",
+          "anchor": "C11",
+          "data": "Budget!B1:B11",
+          "categories": "Budget!A2:A11",
+          "width": 18,
+          "height": 8
+        },
+        {
+          "type": "line",
+          "anchor": "C27",
+          "data": "Log!F1:F27",
+          "categories": "Log!B2:B27",
+          "width": 18,
+          "height": 8
+        },
+        {
+          "type": "bar",
+          "anchor": "C43",
+          "data": "Savings Goals!B1:C6",
+          "categories": "Savings Goals!A2:A6",
+          "width": 18,
+          "height": 8
+        }
       ]
     }
   ]
