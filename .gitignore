@@ -2,6 +2,9 @@
 dist/
 .output/
 
+# generated standalone preview (self-contained HTML built from dist/)
+preview.html
+
 # dependencies
 node_modules/
 
