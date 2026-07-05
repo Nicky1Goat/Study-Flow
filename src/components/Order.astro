@@ -1,0 +1,55 @@
+---
+/* ═══════════════════════════════════════════════════════════════════════════
+   ORDER / SKIP THE QUEUE — conversion module for pre-order & pickup.
+   Built to plug into a provider later (Square Online / me&u / Order-with-Google
+   / Mr Yum). Set PUBLIC_ORDER_URL in .env to activate the live link; until then
+   this shows a clear "coming soon" state so nothing feels broken.
+   ═══════════════════════════════════════════════════════════════════════════ */
+import { site } from "../data/site";
+
+const hasOrdering = Boolean(site.orderUrl);
+---
+
+<section id="order" class="section bg-tomato text-cream">
+  <div class="container-deli">
+    <div class="reveal mx-auto max-w-2xl text-center">
+      <p class="kicker text-mustard">Skip the queue</p>
+      <h2 class="mt-2 text-4xl text-cream sm:text-5xl">Order ahead</h2>
+      <p class="mx-auto mt-4 max-w-xl font-body text-lg leading-relaxed text-cream/90">
+        The queue moves fast — but if you're in a hurry, order ahead and pick up
+        without the wait. Same made-to-order sangaweech, less standing around.
+      </p>
+
+      <div class="mt-8">
+        {
+          hasOrdering ? (
+            <a
+              href={site.orderUrl}
+              target="_blank"
+              rel="noopener"
+              class="btn btn-secondary text-lg"
+            >
+              Order online now
+            </a>
+          ) : (
+            <div class="mx-auto max-w-md rounded-deli border-2 border-cream/40 bg-cream/10 p-6">
+              <p class="font-display text-2xl uppercase text-mustard">
+                Online ordering coming soon
+              </p>
+              <p class="mt-2 font-body text-cream/90">
+                We're wiring up pre-order &amp; pickup. In the meantime, pop in —
+                the action stations keep the line short.
+              </p>
+              {/* TODO: set PUBLIC_ORDER_URL in .env once your provider is live
+                  (Square Online / me&u / Order-with-Google / Mr Yum). The header,
+                  hero, and mobile bar buttons will all switch over automatically. */}
+              <a href="#visit" class="btn btn-secondary mt-5 text-sm">
+                Find us &amp; opening hours
+              </a>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</section>

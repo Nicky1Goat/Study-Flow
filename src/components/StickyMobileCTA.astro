@@ -1,0 +1,53 @@
+---
+/* ═══════════════════════════════════════════════════════════════════════════
+   STICKY MOBILE CTA BAR — persistent bottom bar on phones. Order + Directions
+   (and Call if a phone number is configured). Hidden on lg+ where the header
+   CTA is always visible. Respects safe-area insets on notched devices.
+   ═══════════════════════════════════════════════════════════════════════════ */
+import { site } from "../data/site";
+
+const hasOrdering = Boolean(site.orderUrl);
+const orderHref = hasOrdering ? site.orderUrl : "#order";
+const mapQuery = encodeURIComponent(site.mapEmbedQuery);
+const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${mapQuery}`;
+const phone: string = site.phone;
+const telHref = phone ? `tel:${phone.replace(/\s+/g, "")}` : null;
+---
+
+<div
+  class="fixed inset-x-0 bottom-0 z-50 border-t-[3px] border-espresso bg-cream/95 backdrop-blur lg:hidden"
+  style="padding-bottom: env(safe-area-inset-bottom);"
+>
+  <div class="flex items-stretch gap-2 p-2">
+    <a
+      href={orderHref}
+      {...hasOrdering ? { target: "_blank", rel: "noopener" } : {}}
+      class="btn btn-primary flex-1 px-2 py-3 text-sm"
+    >
+      Skip the Queue
+    </a>
+    <a
+      href={directionsUrl}
+      target="_blank"
+      rel="noopener"
+      class="btn btn-secondary px-3 py-3 text-sm"
+      aria-label="Get directions"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+    </a>
+    {
+      telHref && (
+        <a
+          href={telHref}
+          class="btn btn-ghost px-3 py-3 text-sm"
+          aria-label="Call us"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.98.36 1.93.7 2.84a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.24-1.24a2 2 0 0 1 2.11-.45c.9.34 1.86.57 2.84.7A2 2 0 0 1 22 16.92Z"></path></svg>
+        </a>
+      )
+    }
+  </div>
+</div>
+
+<!-- Spacer so the fixed bar never covers footer content on mobile. -->
+<div class="h-20 lg:hidden" aria-hidden="true"></div>

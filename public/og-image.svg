@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="Sangaweech — Mamma's Signature Style">
+  <!--
+    OG IMAGE SOURCE (1200×630). This SVG is the design source.
+    ⚠️ Social platforms (Facebook, X/Twitter, LinkedIn) do NOT reliably render
+    SVG link previews — export this to /public/og-image.jpg (or .png) and it
+    will be picked up automatically by BaseLayout. See the handover checklist.
+  -->
+  <defs>
+    <pattern id="tiles" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="2" fill="#2B1D14" opacity="0.08"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="#F4ECD8"/>
+  <rect width="1200" height="630" fill="url(#tiles)"/>
+  <rect x="0" y="0" width="1200" height="18" fill="#D95A2B"/>
+  <rect x="0" y="612" width="1200" height="18" fill="#D95A2B"/>
+  <text x="600" y="240" font-family="Caveat, cursive" font-size="64" text-anchor="middle" fill="#C1272D">Mamma's Signature Style</text>
+  <text x="600" y="360" font-family="Anton, sans-serif" font-size="150" font-weight="700" text-anchor="middle" fill="#2B1D14" letter-spacing="2">SANGA<tspan fill="#5C6B34">WEECH</tspan></text>
+  <text x="600" y="440" font-family="Anton, sans-serif" font-size="46" text-anchor="middle" fill="#D95A2B" letter-spacing="4">EAT'A SANGAWEECH</text>
+  <text x="600" y="510" font-family="Instrument Sans, sans-serif" font-size="30" text-anchor="middle" fill="#4A3524">Italian sandwiches · 300 Lygon St, Carlton · Melbourne</text>
+</svg>

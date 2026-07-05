@@ -1,0 +1,122 @@
+---
+/* ═══════════════════════════════════════════════════════════════════════════
+   HEADER — sticky top bar: logo, anchor nav, and the primary
+   "Order / Skip the Queue" CTA. Mobile nav collapses into a toggle.
+   ═══════════════════════════════════════════════════════════════════════════ */
+import { site } from "../data/site";
+import OrderButton from "./OrderButton.astro";
+
+const nav = [
+  { label: "Menu", href: "#menu" },
+  { label: "Our Story", href: "#story" },
+  { label: "Visit", href: "#visit" },
+  { label: "Order", href: "#order" },
+  { label: "Catering", href: "#catering" },
+];
+---
+
+<header
+  class="sticky top-0 z-50 border-b-[3px] border-espresso bg-cream/95 backdrop-blur supports-[backdrop-filter]:bg-cream/80"
+>
+  <div class="container-deli flex items-center justify-between gap-4 py-3">
+    <!-- Logo (text wordmark placeholder — swap for real logo image). -->
+    <a
+      href="#top"
+      class="flex items-center gap-2 no-underline"
+      aria-label={`${site.name} — home`}
+    >
+      <!-- TODO: replace wordmark with real logo SVG/PNG in /public. -->
+      <span
+        class="font-display text-2xl uppercase leading-none text-tomato sm:text-3xl"
+      >
+        Sanga<span class="text-olive">weech</span>
+      </span>
+    </a>
+
+    <!-- Desktop nav -->
+    <nav aria-label="Primary" class="hidden items-center gap-6 lg:flex">
+      {
+        nav.map((item) => (
+          <a
+            href={item.href}
+            class="font-body text-sm font-semibold uppercase tracking-wide text-espresso no-underline transition-colors hover:text-tomato"
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <OrderButton class="hidden text-sm sm:inline-flex" />
+      <!-- Mobile menu toggle -->
+      <button
+        type="button"
+        id="nav-toggle"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+        class="btn btn-ghost px-3 py-2 lg:hidden"
+      >
+        <span class="sr-only">Toggle menu</span>
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          aria-hidden="true"
+        >
+          <line x1="4" y1="7" x2="20" y2="7"></line>
+          <line x1="4" y1="12" x2="20" y2="12"></line>
+          <line x1="4" y1="17" x2="20" y2="17"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile nav panel -->
+  <nav
+    id="mobile-nav"
+    aria-label="Mobile"
+    hidden
+    class="border-t-[3px] border-espresso/20 bg-cream lg:hidden"
+  >
+    <ul class="container-deli flex flex-col gap-1 py-3">
+      {
+        nav.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="mobile-nav-link block rounded px-2 py-3 font-body text-lg font-semibold uppercase tracking-wide text-espresso no-underline hover:bg-cream-200"
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+      <li class="pt-2">
+        <OrderButton class="w-full" />
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<script>
+  // Mobile nav toggle + close on link tap.
+  const toggle = document.getElementById("nav-toggle");
+  const panel = document.getElementById("mobile-nav");
+  if (toggle && panel) {
+    toggle.addEventListener("click", () => {
+      const open = toggle.getAttribute("aria-expanded") === "true";
+      toggle.setAttribute("aria-expanded", String(!open));
+      panel.hidden = open;
+    });
+    panel.querySelectorAll(".mobile-nav-link").forEach((link) =>
+      link.addEventListener("click", () => {
+        toggle.setAttribute("aria-expanded", "false");
+        panel.hidden = true;
+      }),
+    );
+  }
+</script>

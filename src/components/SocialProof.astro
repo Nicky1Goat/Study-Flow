@@ -1,0 +1,52 @@
+---
+/* ═══════════════════════════════════════════════════════════════════════════
+   SOCIAL PROOF STRIP — Instagram follower flex + rotating review pull-quotes.
+   ═══════════════════════════════════════════════════════════════════════════ */
+import { site } from "../data/site";
+import { reviews } from "../data/reviews";
+---
+
+<section aria-label="Social proof" class="border-y-[3px] border-espresso bg-mustard">
+  <div class="container-deli py-8">
+    <!-- IG flex -->
+    <a
+      href={site.socials.instagram}
+      target="_blank"
+      rel="noopener"
+      class="mx-auto flex w-fit items-center gap-2 font-body text-sm font-bold uppercase tracking-wide text-espresso no-underline hover:text-tomato sm:text-base"
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        aria-hidden="true"
+      >
+        <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+        <circle cx="12" cy="12" r="4"></circle>
+        <circle cx="17.5" cy="6.5" r="1" fill="currentColor"></circle>
+      </svg>
+      As seen on Instagram — {site.instagramFollowers} followers {site.instagramHandle}
+    </a>
+
+    <!-- Review quotes -->
+    <ul
+      class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+    >
+      {
+        reviews.map((r) => (
+          <li class="reveal flex flex-col rounded-deli border-2 border-espresso/15 bg-cream/70 p-4">
+            <p class="font-body text-sm italic leading-snug text-espresso">
+              “{r.quote}”
+            </p>
+            <span class="mt-3 font-body text-xs font-semibold uppercase tracking-wide text-espresso-700">
+              — {r.source}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

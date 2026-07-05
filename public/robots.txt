@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+# Sitemap is generated at build time by @astrojs/sitemap.
+# TODO: confirm the production domain matches SITE_URL in astro.config.mjs.
+Sitemap: https://sangaweech.com.au/sitemap-index.xml

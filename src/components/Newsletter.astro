@@ -1,0 +1,77 @@
+---
+/* ═══════════════════════════════════════════════════════════════════════════
+   STAY IN THE LOOP — email/SMS capture to turn the 96K IG audience into an
+   OWNED list. Posts to a hosted provider form action via env vars:
+     PUBLIC_NEWSLETTER_ACTION   → your Mailchimp/Klaviyo/ConvertKit form action
+     PUBLIC_NEWSLETTER_PROVIDER → "mailchimp" | "klaviyo" | "convertkit"
+   Field names differ per provider — see README → "Connecting the newsletter".
+   Until an action URL is set, the form is disabled with a clear TODO note.
+   ═══════════════════════════════════════════════════════════════════════════ */
+const action = import.meta.env.PUBLIC_NEWSLETTER_ACTION || "";
+const provider = import.meta.env.PUBLIC_NEWSLETTER_PROVIDER || "mailchimp";
+const connected = Boolean(action);
+
+// Most providers expect the email field named "EMAIL" (Mailchimp) or "email".
+const emailField = provider === "mailchimp" ? "EMAIL" : "email";
+const phoneField = provider === "mailchimp" ? "PHONE" : "phone";
+---
+
+<section id="loop" class="section tile-bg">
+  <div class="container-deli">
+    <div
+      class="reveal mx-auto max-w-3xl rounded-deli border-[3px] border-espresso bg-mustard p-6 text-center shadow-[var(--shadow-deli)] sm:p-10"
+    >
+      <p class="kicker text-tomato">Don't be a stranger</p>
+      <h2 class="mt-2 text-3xl text-espresso sm:text-4xl">Stay in the loop</h2>
+      <p class="mx-auto mt-3 max-w-xl font-body text-espresso-700">
+        New sangaweech, specials, and where to find us — straight to your inbox
+        (and phone, if you like). No spam, just the good stuff.
+      </p>
+
+      <form
+        method="POST"
+        action={connected ? action : undefined}
+        target="_blank"
+        class="mx-auto mt-6 flex max-w-xl flex-col gap-3 sm:flex-row"
+      >
+        <label class="sr-only" for="loop-email">Email address</label>
+        <input
+          id="loop-email"
+          name={emailField}
+          type="email"
+          required
+          placeholder="you@example.com"
+          autocomplete="email"
+          disabled={!connected}
+          class="min-w-0 flex-1 rounded-lg border-2 border-espresso bg-cream px-4 py-3 font-body text-espresso placeholder:text-espresso/50 focus:border-tomato focus:outline-none disabled:opacity-50"
+        />
+        <label class="sr-only" for="loop-phone">Mobile (optional)</label>
+        <input
+          id="loop-phone"
+          name={phoneField}
+          type="tel"
+          placeholder="Mobile (optional)"
+          autocomplete="tel"
+          disabled={!connected}
+          class="min-w-0 flex-1 rounded-lg border-2 border-espresso bg-cream px-4 py-3 font-body text-espresso placeholder:text-espresso/50 focus:border-tomato focus:outline-none disabled:opacity-50 sm:max-w-[40%]"
+        />
+        <button
+          type="submit"
+          disabled={!connected}
+          class="btn btn-primary shrink-0 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          Sign me up
+        </button>
+      </form>
+
+      {
+        !connected && (
+          <p class="mt-3 text-xs uppercase tracking-wide text-tomato">
+            {/* TODO: set PUBLIC_NEWSLETTER_ACTION in .env to activate signup. */}
+            ⚠ Signup not connected yet — add your list provider in .env.
+          </p>
+        )
+      }
+    </div>
+  </div>
+</section>

@@ -1,0 +1,35 @@
+---
+/* ═══════════════════════════════════════════════════════════════════════════
+   HOME — single-page scroll assembling every section in order.
+   ═══════════════════════════════════════════════════════════════════════════ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import SocialProof from "../components/SocialProof.astro";
+import Story from "../components/Story.astro";
+import Menu from "../components/Menu.astro";
+import Gallery from "../components/Gallery.astro";
+import Visit from "../components/Visit.astro";
+import Order from "../components/Order.astro";
+import Catering from "../components/Catering.astro";
+import Newsletter from "../components/Newsletter.astro";
+import Footer from "../components/Footer.astro";
+import StickyMobileCTA from "../components/StickyMobileCTA.astro";
+---
+
+<BaseLayout path="/">
+  <Header />
+  <main id="main">
+    <Hero />
+    <SocialProof />
+    <Story />
+    <Menu />
+    <Gallery />
+    <Visit />
+    <Order />
+    <Catering />
+    <Newsletter />
+  </main>
+  <Footer />
+  <StickyMobileCTA />
+</BaseLayout>

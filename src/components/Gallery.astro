@@ -1,0 +1,72 @@
+---
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE VIBE / GALLERY — image grid slots for interior + food, describing the
+   fit-out (orange laminex, cream retro tiles, lace curtains, communal seating).
+   ═══════════════════════════════════════════════════════════════════════════ */
+import ImageSlot from "./ImageSlot.astro";
+
+// TODO: replace each slot with real interior + food photos (site / Instagram).
+const shots = [
+  {
+    label: "Orange laminex benches",
+    alt: "Burnt-orange laminex counter benches inside Sangaweech",
+    ratio: "1/1",
+  },
+  {
+    label: "Cream retro tiles",
+    alt: "Cream retro-patterned wall tiles",
+    ratio: "1/1",
+  },
+  {
+    label: "Hero sandwich close-up",
+    alt: "A made-to-order panino, close up",
+    ratio: "1/1",
+  },
+  {
+    label: "Lace curtains & shopfront",
+    alt: "Lace curtains in the converted Lygon Street shopfront",
+    ratio: "1/1",
+  },
+  {
+    label: "Communal / kerbside seating",
+    alt: "Strangers chatting over sandwiches at communal seating",
+    ratio: "1/1",
+  },
+  {
+    label: "Home chopped chips",
+    alt: "Golden home-chopped chips with sea salt",
+    ratio: "1/1",
+  },
+];
+---
+
+<section id="vibe" class="section tile-bg">
+  <div class="container-deli">
+    <div class="reveal max-w-2xl">
+      <p class="kicker">The vibe</p>
+      <h2 class="mt-2 text-4xl text-espresso sm:text-5xl">
+        A converted deli with '80s flair
+      </h2>
+      <p class="mt-4 font-body text-lg leading-relaxed text-espresso-700">
+        A former hairdressing salon reborn as an Italian-Australian deli:
+        <strong>orange laminex</strong> benches, <strong>cream retro tiles</strong>,
+        <strong>lace curtains</strong> and staff in '80s-flair uniforms.
+        Counter-service action stations keep the queue moving fast, while
+        communal and kerbside seating gets strangers chatting over sandwiches.
+      </p>
+    </div>
+
+    <div class="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+      {
+        shots.map((s, i) => (
+          <div
+            class="reveal overflow-hidden rounded-deli border-[3px] border-espresso"
+            style={`transition-delay:${(i % 3) * 80}ms`}
+          >
+            <ImageSlot label={s.label} alt={s.alt} ratio={s.ratio} />
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

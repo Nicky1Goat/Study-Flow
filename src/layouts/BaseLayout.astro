@@ -1,0 +1,187 @@
+---
+/* ═══════════════════════════════════════════════════════════════════════════
+   BASE LAYOUT — <head> (SEO, OG/Twitter, fonts), skip link, JSON-LD schema,
+   and the global scroll-reveal enhancer. Every page wraps its content here.
+   ═══════════════════════════════════════════════════════════════════════════ */
+import "../styles/global.css";
+import { site } from "../data/site";
+import { menu } from "../data/menu";
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Path for canonical/OG URL, e.g. "/menu". Defaults to current path. */
+  path?: string;
+  /** Relative path to an OG image in /public. TODO: supply real brand image. */
+  ogImage?: string;
+}
+
+const {
+  title,
+  description = site.description,
+  path,
+  ogImage = "/og-image.jpg",
+} = Astro.props;
+
+const pageTitle = title
+  ? `${title} · ${site.name}`
+  : `${site.name} — ${site.tagline}`;
+
+const canonicalURL = new URL(path ?? Astro.url.pathname, Astro.site);
+const ogImageURL = new URL(ogImage, Astro.site);
+
+// ── schema.org: Restaurant + Menu ───────────────────────────────────────────
+// Maps opening hours into schema format (skips days marked "Closed").
+const openingHoursSpec = site.hours
+  .filter((h) => h.open !== "Closed")
+  .map((h) => ({
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: h.day,
+    opens: h.open,
+    closes: h.close,
+  }));
+
+const restaurantSchema = {
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  name: site.name,
+  description: site.description,
+  url: canonicalURL.origin,
+  image: ogImageURL.href,
+  servesCuisine: site.cuisine,
+  priceRange: site.priceRange,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: site.address.street,
+    addressLocality: site.address.suburb,
+    addressRegion: site.address.state,
+    postalCode: site.address.postcode,
+    addressCountry: "AU",
+  },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: site.geo.lat,
+    longitude: site.geo.lng,
+  },
+  ...(site.phone ? { telephone: site.phone } : {}),
+  openingHoursSpecification: openingHoursSpec,
+  sameAs: [site.socials.instagram, site.socials.tiktok, site.socials.facebook],
+  hasMenu: {
+    "@type": "Menu",
+    url: `${canonicalURL.origin}/menu`,
+    hasMenuSection: menu.map((cat) => ({
+      "@type": "MenuSection",
+      name: cat.title,
+      hasMenuItem: cat.items.map((item) => ({
+        "@type": "MenuItem",
+        name: item.name,
+        ...(item.description ? { description: item.description } : {}),
+        ...(item.price
+          ? {
+              offers: {
+                "@type": "Offer",
+                price: item.price.toFixed(2),
+                priceCurrency: "AUD",
+              },
+            }
+          : {}),
+      })),
+    })),
+  },
+};
+---
+
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL.href} />
+    <meta name="theme-color" content="#D95A2B" />
+
+    <!-- Favicon slots — TODO: replace with real brand favicon set. -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="restaurant" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL.href} />
+    <meta property="og:image" content={ogImageURL.href} />
+    <meta property="og:locale" content="en_AU" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL.href} />
+
+    <!-- Fonts: preconnect + display=swap keeps them fast & non-blocking.
+         Anton (display) · Caveat (nonna script) · Instrument Sans (body). -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Instrument+Sans:wght@400;500;600;700&display=swap"
+    />
+
+    <!-- Progressive enhancement: if JS is disabled, never hide reveal content. -->
+    <noscript>
+      <style>
+        .reveal {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+      </style>
+    </noscript>
+
+    <!-- LocalBusiness / Restaurant + Menu structured data -->
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(restaurantSchema)}
+    />
+
+    <!-- Analytics slot — wire up Plausible/Fathom/GA4 here if PUBLIC_ANALYTICS_DOMAIN set. -->
+  </head>
+  <body>
+    <!-- Skip link for keyboard / screen-reader users (WCAG). -->
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded focus:bg-espresso focus:px-4 focus:py-2 focus:text-cream"
+      >Skip to content</a
+    >
+
+    <slot />
+
+    <!-- ── Progressive scroll-reveal (no framework, ~10 lines) ─────────────── -->
+    <script>
+      const reduce = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      const els = document.querySelectorAll<HTMLElement>(".reveal");
+      if (reduce || !("IntersectionObserver" in window)) {
+        els.forEach((el) => el.classList.add("is-visible"));
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                io.unobserve(entry.target);
+              }
+            });
+          },
+          { rootMargin: "0px 0px -10% 0px", threshold: 0.05 },
+        );
+        els.forEach((el) => io.observe(el));
+      }
+    </script>
+  </body>
+</html>

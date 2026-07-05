@@ -1,0 +1,24 @@
+---
+/* ═══════════════════════════════════════════════════════════════════════════
+   /menu — standalone full-menu page (also the canonical menu URL used by the
+   Restaurant JSON-LD). Reuses the same Menu component as the home page.
+   ═══════════════════════════════════════════════════════════════════════════ */
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Menu from "../components/Menu.astro";
+import Footer from "../components/Footer.astro";
+import StickyMobileCTA from "../components/StickyMobileCTA.astro";
+---
+
+<BaseLayout
+  title="Menu"
+  path="/menu"
+  description="The full Sangaweech menu — made-to-order filled focaccia & panini, sides, sweets and drinks. Italian sandwiches on Lygon Street, Carlton."
+>
+  <Header />
+  <main id="main">
+    <Menu />
+  </main>
+  <Footer />
+  <StickyMobileCTA />
+</BaseLayout>

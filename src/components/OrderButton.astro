@@ -1,0 +1,37 @@
+---
+/* ═══════════════════════════════════════════════════════════════════════════
+   ORDER BUTTON — the "Order / Skip the Queue" CTA, reused in the header, hero,
+   order section and mobile sticky bar. Behaviour is config-driven:
+     • If PUBLIC_ORDER_URL is set (see .env), it links straight to the provider
+       (Square Online / me&u / Order-with-Google / Mr Yum) in a new tab.
+     • If not set, it anchors to the #order section which shows a "coming soon"
+       state — so the button is never dead.
+   Drop in the real ordering integration by setting one env var. No code change.
+   ═══════════════════════════════════════════════════════════════════════════ */
+import { site } from "../data/site";
+
+interface Props {
+  class?: string;
+  label?: string;
+}
+
+const { class: className = "", label = "Order / Skip the Queue" } = Astro.props;
+const hasOrdering = Boolean(site.orderUrl);
+---
+
+{
+  hasOrdering ? (
+    <a
+      href={site.orderUrl}
+      target="_blank"
+      rel="noopener"
+      class={`btn btn-primary ${className}`}
+    >
+      {label}
+    </a>
+  ) : (
+    <a href="#order" class={`btn btn-primary ${className}`}>
+      {label}
+    </a>
+  )
+}

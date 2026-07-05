@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Sangaweech">
+  <!-- Placeholder favicon — swap for the real brand mark. Retro deli 'S'. -->
+  <rect width="64" height="64" rx="12" fill="#D95A2B"/>
+  <rect x="6" y="6" width="52" height="52" rx="9" fill="none" stroke="#F4ECD8" stroke-width="2.5" stroke-dasharray="5 4"/>
+  <text x="32" y="45" font-family="Anton, Archivo Black, sans-serif" font-size="42" font-weight="700"
+        text-anchor="middle" fill="#F4ECD8">S</text>
+</svg>

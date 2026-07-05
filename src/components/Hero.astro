@@ -1,0 +1,73 @@
+---
+/* ═══════════════════════════════════════════════════════════════════════════
+   HERO — big brand statement, tagline, locator line, primary + secondary CTAs,
+   and the hero image slot (shopfront or hero sandwich).
+   ═══════════════════════════════════════════════════════════════════════════ */
+import { site } from "../data/site";
+import OrderButton from "./OrderButton.astro";
+import ImageSlot from "./ImageSlot.astro";
+---
+
+<section id="top" class="tile-bg relative overflow-hidden">
+  <div
+    class="container-deli grid items-center gap-10 py-14 md:py-20 lg:grid-cols-2 lg:gap-12"
+  >
+    <!-- Copy -->
+    <div class="reveal">
+      <p class="kicker">Mamma's signature style</p>
+      <h1 class="mt-2 text-5xl text-espresso sm:text-6xl lg:text-7xl">
+        Eat'a<br />
+        <span class="text-tomato">Sangaweech</span>
+      </h1>
+      <p
+        class="mt-5 max-w-md font-body text-lg leading-relaxed text-espresso-700"
+      >
+        The Italian sandwich shop on Lygon Street from Sooshi Mango.
+        Made-to-order filled focaccia &amp; panini — because the bread is the
+        hero. <span class="font-semibold">Making Lygon Italian again.</span>
+      </p>
+
+      <!-- Locator line -->
+      <p
+        class="mt-4 flex items-center gap-2 font-body text-sm font-semibold uppercase tracking-wide text-olive"
+      >
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          aria-hidden="true"
+        >
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"></path>
+          <circle cx="12" cy="10" r="3"></circle>
+        </svg>
+        {site.address.full} • Melbourne
+      </p>
+
+      <div class="mt-7 flex flex-wrap gap-3">
+        <OrderButton />
+        <a href="#menu" class="btn btn-secondary">See the Menu</a>
+      </div>
+    </div>
+
+    <!-- Hero image -->
+    <div class="reveal">
+      <div
+        class="overflow-hidden rounded-deli border-[3px] border-espresso shadow-[var(--shadow-deli)]"
+      >
+        <!-- TODO: swap for the real shopfront or hero-sandwich photo. -->
+        <ImageSlot
+          label="Shopfront or hero sandwich"
+          alt="Sangaweech shopfront on Lygon Street, Carlton"
+          ratio="4/3"
+          loading="eager"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Decorative laminex band at the base of the hero. -->
+  <div class="laminex-band h-3 w-full" aria-hidden="true"></div>
+</section>

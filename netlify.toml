@@ -1,0 +1,24 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Netlify deploy config. Netlify auto-detects Astro, but this makes it explicit
+# and enables Netlify Forms for the catering enquiry (data-netlify="true").
+# ─────────────────────────────────────────────────────────────────────────────
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Security + caching headers (helps Lighthouse best-practices score).
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "SAMEORIGIN"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Long-cache fingerprinted assets.
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

@@ -1,0 +1,57 @@
+---
+/* ═══════════════════════════════════════════════════════════════════════════
+   OUR STORY — Sooshi Mango + Johnny Di Francesco backstory. "The bread is the
+   hero." Factual copy only; no fabricated quotes.
+   ═══════════════════════════════════════════════════════════════════════════ */
+import ImageSlot from "./ImageSlot.astro";
+---
+
+<section id="story" class="section">
+  <div class="container-deli grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+    <!-- Image -->
+    <div class="reveal order-2 lg:order-1">
+      <div
+        class="overflow-hidden rounded-deli border-[3px] border-espresso shadow-[var(--shadow-deli)]"
+      >
+        <!-- TODO: swap for a real interior / bread-making / team photo. -->
+        <ImageSlot
+          label="Interior, bread or team photo"
+          alt="Inside Sangaweech — the converted Lygon Street deli"
+          ratio="4/5"
+        />
+      </div>
+    </div>
+
+    <!-- Copy -->
+    <div class="reveal order-1 lg:order-2">
+      <p class="kicker">Our story</p>
+      <h2 class="mt-2 text-4xl text-espresso sm:text-5xl">
+        The bread is the hero
+      </h2>
+      <div
+        class="mt-5 space-y-4 font-body text-lg leading-relaxed text-espresso-700"
+      >
+        <p>
+          Sangaweech is the Italian sandwich shop on Lygon Street, Carlton, from
+          <strong>Sooshi Mango</strong> — the comedy trio behind Johnny, Vince &amp;
+          Sam's Ristorante, just a few doors away. The name is the way an Italian
+          nonna pronounces “sandwich”.
+        </p>
+        <p>
+          The team spent around <strong>18 months</strong> developing the menu,
+          with chef partner <strong>Johnny Di Francesco</strong> (of 400 Gradi)
+          travelling to Padua, Italy to master the bread — because the bread is
+          the hero of any panino.
+        </p>
+        <p>
+          Made-to-order filled focaccia and panini, house-made spreads and
+          dressings, served in a converted Lygon Street shopfront full of retro
+          Italian-Australian nostalgia.
+          <span class="font-script text-2xl text-tomato"
+            >Making Lygon Italian again.</span
+          >
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
