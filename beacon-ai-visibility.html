@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beacon — AI Visibility Optimizer</title>
+<meta name="description" content="Scan any website, score its visibility to AI assistants and search engines, and auto-generate the fixes: llms.txt, JSON-LD, meta tags and robots.txt.">
+<style>
+  :root {
+    --bg: #070a13;
+    --bg-2: #0c1120;
+    --card: rgba(255,255,255,0.035);
+    --card-border: rgba(255,255,255,0.08);
+    --text: #e8ecf5;
+    --muted: #8b94ab;
+    --accent-1: #6366f1;
+    --accent-2: #22d3ee;
+    --accent-3: #a855f7;
+    --pass: #34d399;
+    --warn: #fbbf24;
+    --fail: #f87171;
+    --radius: 16px;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, "Helvetica Neue", sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(600px 400px at 15% -5%, rgba(99,102,241,0.22), transparent 60%),
+      radial-gradient(700px 500px at 90% 0%, rgba(34,211,238,0.12), transparent 60%),
+      radial-gradient(800px 600px at 50% 110%, rgba(168,85,247,0.10), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .wrap { position: relative; z-index: 1; max-width: 1060px; margin: 0 auto; padding: 0 24px 96px; }
+
+  /* ---------- Header ---------- */
+  header { padding: 56px 0 8px; text-align: center; }
+  .brand {
+    display: inline-flex; align-items: center; gap: 12px;
+    font-weight: 800; font-size: 1.15rem; letter-spacing: 0.02em;
+  }
+  .brand-badge {
+    width: 38px; height: 38px; border-radius: 11px;
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    display: grid; place-items: center; font-size: 1.15rem;
+    box-shadow: 0 6px 24px rgba(99,102,241,0.45);
+  }
+  h1 {
+    margin-top: 34px;
+    font-size: clamp(2.1rem, 5.5vw, 3.4rem);
+    font-weight: 800; letter-spacing: -0.03em; line-height: 1.12;
+  }
+  h1 .grad {
+    background: linear-gradient(92deg, var(--accent-1), var(--accent-2) 55%, var(--accent-3));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .sub {
+    max-width: 640px; margin: 18px auto 0;
+    color: var(--muted); font-size: 1.06rem;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 22px; }
+  .chip {
+    font-size: 0.78rem; color: var(--muted);
+    border: 1px solid var(--card-border); border-radius: 999px;
+    padding: 5px 13px; background: var(--card);
+  }
+
+  /* ---------- Scan bar ---------- */
+  .scanbar {
+    margin: 40px auto 0; max-width: 680px;
+    display: flex; gap: 10px;
+    background: var(--bg-2);
+    border: 1px solid var(--card-border);
+    border-radius: 18px; padding: 10px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+  }
+  .scanbar input {
+    flex: 1; background: transparent; border: none; outline: none;
+    color: var(--text); font-size: 1rem; padding: 10px 14px;
+    font-family: var(--mono);
+  }
+  .scanbar input::placeholder { color: #4a5268; font-family: inherit; }
+  .btn {
+    border: none; cursor: pointer; font-weight: 700; font-size: 0.95rem;
+    color: #fff; border-radius: 12px; padding: 12px 26px;
+    background: linear-gradient(135deg, var(--accent-1), #4f46e5);
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+    box-shadow: 0 6px 20px rgba(99,102,241,0.35);
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(99,102,241,0.5); }
+  .btn:active { transform: translateY(0); }
+  .btn:disabled { opacity: 0.55; cursor: wait; transform: none; }
+  .btn-ghost {
+    background: transparent; border: 1px solid var(--card-border);
+    color: var(--text); box-shadow: none; font-weight: 600;
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.25); box-shadow: none; }
+  .btn-sm { padding: 8px 16px; font-size: 0.84rem; border-radius: 10px; }
+
+  .status-line {
+    text-align: center; margin-top: 16px; min-height: 24px;
+    color: var(--muted); font-size: 0.9rem;
+  }
+  .status-line .spinner {
+    display: inline-block; width: 13px; height: 13px; margin-right: 8px;
+    border: 2px solid rgba(255,255,255,0.2); border-top-color: var(--accent-2);
+    border-radius: 50%; animation: spin 0.8s linear infinite; vertical-align: -2px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .status-line.error { color: var(--fail); }
+
+  /* ---------- Cards / sections ---------- */
+  section { margin-top: 56px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 28px;
+    backdrop-filter: blur(8px);
+  }
+  .section-title { font-size: 1.3rem; font-weight: 750; letter-spacing: -0.01em; margin-bottom: 6px; }
+  .section-sub { color: var(--muted); font-size: 0.92rem; margin-bottom: 22px; }
+
+  /* ---------- Score panel ---------- */
+  .score-panel { display: grid; grid-template-columns: 240px 1fr; gap: 34px; align-items: center; }
+  @media (max-width: 720px) { .score-panel { grid-template-columns: 1fr; justify-items: center; } }
+  .ring-wrap { position: relative; width: 200px; height: 200px; }
+  .ring-wrap svg { transform: rotate(-90deg); }
+  .ring-bg { fill: none; stroke: rgba(255,255,255,0.07); stroke-width: 13; }
+  .ring-fg {
+    fill: none; stroke: url(#ringGrad); stroke-width: 13; stroke-linecap: round;
+    transition: stroke-dashoffset 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .ring-center {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .ring-score { font-size: 3rem; font-weight: 800; letter-spacing: -0.04em; line-height: 1; }
+  .ring-label { color: var(--muted); font-size: 0.8rem; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.12em; }
+  .score-meta { width: 100%; }
+  .scanned-url {
+    font-family: var(--mono); font-size: 0.86rem; color: var(--accent-2);
+    word-break: break-all; margin-bottom: 4px;
+  }
+  .verdict { font-size: 1.35rem; font-weight: 750; margin-bottom: 18px; }
+  .cat-row { margin-bottom: 14px; }
+  .cat-head { display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 6px; }
+  .cat-head .pct { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .cat-bar { height: 8px; border-radius: 99px; background: rgba(255,255,255,0.07); overflow: hidden; }
+  .cat-fill {
+    height: 100%; border-radius: 99px;
+    background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+    width: 0; transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* ---------- Checks ---------- */
+  .cat-group { margin-bottom: 26px; }
+  .cat-group:last-child { margin-bottom: 0; }
+  .cat-group h3 {
+    font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--muted); margin-bottom: 12px; font-weight: 700;
+  }
+  .check {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 13px 16px; border-radius: 12px;
+    border: 1px solid transparent; margin-bottom: 8px;
+    background: rgba(255,255,255,0.02);
+  }
+  .check-icon {
+    flex: none; width: 22px; height: 22px; border-radius: 50%;
+    display: grid; place-items: center; font-size: 0.72rem; font-weight: 800;
+    margin-top: 2px;
+  }
+  .check.pass .check-icon { background: rgba(52,211,153,0.15); color: var(--pass); }
+  .check.warn .check-icon { background: rgba(251,191,36,0.15); color: var(--warn); }
+  .check.fail .check-icon { background: rgba(248,113,113,0.15); color: var(--fail); }
+  .check.fail { border-color: rgba(248,113,113,0.15); }
+  .check-body { flex: 1; min-width: 0; }
+  .check-label { font-weight: 650; font-size: 0.95rem; }
+  .check-detail { color: var(--muted); font-size: 0.86rem; margin-top: 2px; }
+  .check-fix {
+    margin-top: 7px; font-size: 0.84rem; color: #c7d2fe;
+    background: rgba(99,102,241,0.09); border-left: 3px solid var(--accent-1);
+    padding: 7px 12px; border-radius: 0 8px 8px 0;
+  }
+  .check-fix b { color: #e0e7ff; }
+
+  /* ---------- Generator ---------- */
+  .gen-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
+  @media (max-width: 720px) { .gen-grid { grid-template-columns: 1fr; } }
+  .field label {
+    display: block; font-size: 0.8rem; font-weight: 650; color: var(--muted);
+    margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.07em;
+  }
+  .field input, .field textarea {
+    width: 100%; background: var(--bg-2); border: 1px solid var(--card-border);
+    border-radius: 10px; color: var(--text); font-size: 0.92rem;
+    padding: 11px 14px; outline: none; font-family: inherit;
+    transition: border-color 0.15s;
+  }
+  .field input:focus, .field textarea:focus { border-color: var(--accent-1); }
+  .field textarea { resize: vertical; min-height: 74px; }
+  .field.full { grid-column: 1 / -1; }
+  .hint { font-size: 0.76rem; color: #5b6478; margin-top: 5px; }
+
+  .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .tab {
+    cursor: pointer; border: 1px solid var(--card-border); background: transparent;
+    color: var(--muted); font-weight: 650; font-size: 0.86rem;
+    padding: 8px 18px; border-radius: 999px; transition: all 0.15s;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active {
+    color: #fff; border-color: transparent;
+    background: linear-gradient(135deg, var(--accent-1), #4f46e5);
+  }
+  .output-wrap { position: relative; }
+  .output-actions { position: absolute; top: 12px; right: 12px; display: flex; gap: 8px; z-index: 2; }
+  pre.output {
+    background: #05070e; border: 1px solid var(--card-border);
+    border-radius: 12px; padding: 20px; padding-top: 52px;
+    font-family: var(--mono); font-size: 0.82rem; line-height: 1.55;
+    color: #a5f3fc; overflow-x: auto; white-space: pre; min-height: 220px;
+    max-height: 480px; overflow-y: auto;
+  }
+  .copy-ok { color: var(--pass) !important; border-color: rgba(52,211,153,0.4) !important; }
+
+  /* ---------- Footer ---------- */
+  footer {
+    margin-top: 72px; text-align: center; color: #57607a; font-size: 0.82rem;
+    max-width: 640px; margin-left: auto; margin-right: auto;
+  }
+  footer a { color: var(--muted); }
+
+  .hidden { display: none !important; }
+  .fade-in { animation: fadeUp 0.5s ease both; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand"><span class="brand-badge">◆</span> Beacon</div>
+    <h1>Get your website seen by<br><span class="grad">AI assistants &amp; search engines</span></h1>
+    <p class="sub">Scan any site and get a visibility score based on the real signals AI crawlers and search engines read — then auto-generate every fix, ready to paste.</p>
+    <div class="chips">
+      <span class="chip">GPTBot · ClaudeBot · PerplexityBot</span>
+      <span class="chip">llms.txt</span>
+      <span class="chip">JSON-LD structured data</span>
+      <span class="chip">Open Graph &amp; meta tags</span>
+      <span class="chip">robots.txt &amp; sitemap</span>
+    </div>
+  </header>
+
+  <div class="scanbar">
+    <input id="urlInput" type="url" placeholder="yourwebsite.com" spellcheck="false"
+           onkeydown="if(event.key==='Enter')runScan()">
+    <button class="btn" id="scanBtn" onclick="runScan()">Scan site</button>
+  </div>
+  <div class="status-line" id="statusLine"></div>
+
+  <!-- ================= RESULTS ================= -->
+  <section id="resultsSection" class="hidden">
+    <div class="card score-panel fade-in">
+      <div class="ring-wrap">
+        <svg width="200" height="200" viewBox="0 0 200 200">
+          <defs>
+            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#6366f1"/>
+              <stop offset="100%" stop-color="#22d3ee"/>
+            </linearGradient>
+          </defs>
+          <circle class="ring-bg" cx="100" cy="100" r="88"/>
+          <circle class="ring-fg" id="ringFg" cx="100" cy="100" r="88"
+                  stroke-dasharray="552.9" stroke-dashoffset="552.9"/>
+        </svg>
+        <div class="ring-center">
+          <div class="ring-score" id="ringScore">0</div>
+          <div class="ring-label">AI Visibility</div>
+        </div>
+      </div>
+      <div class="score-meta">
+        <div class="scanned-url" id="scannedUrl"></div>
+        <div class="verdict" id="verdict"></div>
+        <div id="catBars"></div>
+      </div>
+    </div>
+
+    <section>
+      <div class="card fade-in">
+        <div class="section-title">Diagnostics</div>
+        <div class="section-sub">Every check below is something AI crawlers or search engines actually read. Failed checks include the exact fix.</div>
+        <div id="checksContainer"></div>
+        <div style="margin-top:22px; text-align:center;">
+          <button class="btn" onclick="document.getElementById('genSection').scrollIntoView()">⚡ Generate all my fixes</button>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- ================= GENERATOR ================= -->
+  <section id="genSection">
+    <div class="card">
+      <div class="section-title">Fix generator</div>
+      <div class="section-sub">Fill in your site details (auto-filled after a scan) and get ready-to-paste files. Add them to your site and re-scan to watch your score climb.</div>
+
+      <div class="gen-grid">
+        <div class="field">
+          <label>Site / business name</label>
+          <input id="gName" placeholder="Acme Studio">
+        </div>
+        <div class="field">
+          <label>Site URL</label>
+          <input id="gUrl" placeholder="https://acme.com">
+        </div>
+        <div class="field full">
+          <label>What your site does (one clear sentence)</label>
+          <textarea id="gDesc" placeholder="Acme Studio designs affordable custom logos for small businesses, delivered in 48 hours."></textarea>
+          <div class="hint">This exact sentence is what AI assistants will read first. Be concrete: who it's for + what it does.</div>
+        </div>
+        <div class="field full">
+          <label>Key pages (one per line — Title | /path | short description)</label>
+          <textarea id="gPages" placeholder="Pricing | /pricing | Plans starting at $19/mo&#10;About | /about | Who we are and why we built this"></textarea>
+        </div>
+        <div class="field">
+          <label>Contact email (optional)</label>
+          <input id="gEmail" placeholder="hello@acme.com">
+        </div>
+        <div class="field">
+          <label>Social profile URLs (optional, comma-separated)</label>
+          <input id="gSocial" placeholder="https://x.com/acme, https://linkedin.com/company/acme">
+        </div>
+      </div>
+
+      <button class="btn" onclick="generateAll()">Generate files</button>
+
+      <div id="genOutputs" class="hidden" style="margin-top:26px;">
+        <div class="tabs" id="genTabs"></div>
+        <div class="output-wrap">
+          <div class="output-actions">
+            <button class="btn btn-ghost btn-sm" id="copyBtn" onclick="copyOutput()">Copy</button>
+            <button class="btn btn-ghost btn-sm" onclick="downloadOutput()">Download</button>
+          </div>
+          <pre class="output" id="outputPre"></pre>
+        </div>
+        <div class="check-fix" style="margin-top:14px;" id="outputHint"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p><b>How this actually works:</b> no tool can force an AI to recommend a site or guarantee a #1 ranking. What Beacon does is real: it makes your site fully readable and citable by AI crawlers and search engines, so when someone asks about what you offer, your site is in the running. Fix the checks, publish great content, re-scan.</p>
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   Fetching — direct first, then public CORS proxies as fallback
+   ============================================================ */
+const PROXIES = [
+  u => u,                                                         // direct (works if target sends CORS headers)
+  u => "https://api.allorigins.win/raw?url=" + encodeURIComponent(u),
+  u => "https://corsproxy.io/?url=" + encodeURIComponent(u),
+];
+
+async function fetchText(url, { timeout = 15000 } = {}) {
+  let lastErr, httpStatus = 0;
+  for (const wrap of PROXIES) {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), timeout);
+    try {
+      const res = await fetch(wrap(url), { signal: ctrl.signal, redirect: "follow" });
+      clearTimeout(t);
+      if (!res.ok) {
+        lastErr = new Error("HTTP " + res.status);
+        // A 4xx from the target is a definitive "not there", not a proxy hiccup
+        if (res.status >= 400 && res.status < 500) httpStatus = res.status;
+        continue;
+      }
+      const text = await res.text();
+      return { ok: true, text, status: res.status };
+    } catch (e) {
+      clearTimeout(t);
+      lastErr = e;
+    }
+  }
+  return { ok: false, httpStatus, error: lastErr ? String(lastErr.message || lastErr) : "fetch failed" };
+}
+
+/* Fetch a plain-text resource (robots.txt / llms.txt). Many SPAs answer
+   every path with index.html, so an HTML-looking body counts as "missing". */
+async function fetchPlainFile(url) {
+  const r = await fetchText(url, { timeout: 12000 });
+  if (!r.ok) {
+    // 4xx = the server answered "this file doesn't exist"; anything else = we couldn't tell
+    return { exists: false, unknown: !(r.httpStatus >= 400 && r.httpStatus < 500) };
+  }
+  const head = r.text.slice(0, 300).trim().toLowerCase();
+  if (head.startsWith("<!doctype") || head.startsWith("<html") || head.includes("<head>")) {
+    return { exists: false, unknown: false };
+  }
+  if (r.text.trim().length === 0) return { exists: false, unknown: false };
+  return { exists: true, text: r.text };
+}
+
+/* ============================================================
+   robots.txt parsing — which AI crawlers are blocked?
+   ============================================================ */
+const AI_BOTS = [
+  { ua: "GPTBot",           who: "ChatGPT (OpenAI)" },
+  { ua: "ClaudeBot",        who: "Claude (Anthropic)" },
+  { ua: "PerplexityBot",    who: "Perplexity" },
+  { ua: "Google-Extended",  who: "Gemini (Google AI)" },
+  { ua: "Applebot-Extended",who: "Apple Intelligence" },
+];
+
+function parseRobots(text) {
+  const groups = []; // { agents: [], rules: [{type, path}] }
+  let current = null;
+  let lastWasAgent = false;
+  for (let raw of text.split(/\r?\n/)) {
+    const line = raw.replace(/#.*$/, "").trim();
+    if (!line) continue;
+    const m = line.match(/^([A-Za-z-]+)\s*:\s*(.*)$/);
+    if (!m) continue;
+    const key = m[1].toLowerCase(), val = m[2].trim();
+    if (key === "user-agent") {
+      if (!lastWasAgent) { current = { agents: [], rules: [] }; groups.push(current); }
+      current.agents.push(val.toLowerCase());
+      lastWasAgent = true;
+    } else if (key === "disallow" || key === "allow") {
+      if (current) current.rules.push({ type: key, path: val });
+      lastWasAgent = false;
+    } else {
+      lastWasAgent = false;
+    }
+  }
+  const sitemaps = [...text.matchAll(/^\s*sitemap\s*:\s*(\S+)/gim)].map(m => m[1]);
+  return { groups, sitemaps };
+}
+
+/* Is this bot blocked from the site root? Specific UA group wins over "*". */
+function botBlocked(robots, ua) {
+  const lc = ua.toLowerCase();
+  let group = robots.groups.find(g => g.agents.some(a => a === lc || (a !== "*" && lc.includes(a))));
+  if (!group) group = robots.groups.find(g => g.agents.includes("*"));
+  if (!group) return false;
+  const disallowAll = group.rules.some(r => r.type === "disallow" && (r.path === "/" || r.path === "/*"));
+  const allowAll = group.rules.some(r => r.type === "allow" && r.path === "/");
+  return disallowAll && !allowAll;
+}
+
+/* ============================================================
+   Page analysis
+   ============================================================ */
+function analyzeDoc(doc, finalUrl) {
+  const q = sel => doc.querySelector(sel);
+  const meta = name => { const el = q(`meta[name="${name}" i]`); return el ? (el.getAttribute("content") || "").trim() : ""; };
+  const og   = prop => { const el = q(`meta[property="${prop}" i]`); return el ? (el.getAttribute("content") || "").trim() : ""; };
+
+  const jsonLd = [];
+  doc.querySelectorAll('script[type="application/ld+json"]').forEach(s => {
+    try { jsonLd.push(JSON.parse(s.textContent)); } catch (_) {}
+  });
+
+  const bodyText = (doc.body ? doc.body.textContent : "").replace(/\s+/g, " ").trim();
+
+  return {
+    title: (q("title") ? q("title").textContent : "").trim(),
+    description: meta("description"),
+    canonical: q('link[rel="canonical" i]') ? q('link[rel="canonical" i]').getAttribute("href") : "",
+    robotsMeta: meta("robots").toLowerCase(),
+    lang: doc.documentElement.getAttribute("lang") || "",
+    viewport: meta("viewport"),
+    h1s: [...doc.querySelectorAll("h1")].map(h => h.textContent.trim()).filter(Boolean),
+    ogTitle: og("og:title"), ogDesc: og("og:description"), ogImage: og("og:image"),
+    twitterCard: meta("twitter:card"),
+    favicon: !!q('link[rel~="icon" i]'),
+    jsonLd,
+    wordCount: bodyText ? bodyText.split(" ").length : 0,
+    https: finalUrl.startsWith("https://"),
+  };
+}
+
+/* ============================================================
+   Checks & scoring
+   ============================================================ */
+const CATS = {
+  crawlers: "AI crawler access",
+  structured: "Structured data & indexing",
+  meta: "Meta tags & social previews",
+  content: "Content & technical",
+};
+
+function buildChecks(page, robotsRes, llmsRes, sitemapOk, siteOrigin) {
+  const c = [];
+  const add = (cat, weight, status, label, detail, fix) =>
+    c.push({ cat, weight, status, label, detail, fix });
+
+  /* ---- AI crawler access (32) ---- */
+  if (robotsRes.unknown) {
+    add("crawlers", 4, "warn", "robots.txt", "Couldn't be fetched from this browser — verify it exists at " + siteOrigin + "/robots.txt.", null);
+    for (const b of AI_BOTS) {
+      add("crawlers", 4, "warn", b.who + " access (" + b.ua + ")", "Unknown — robots.txt couldn't be read.", null);
+    }
+  } else if (!robotsRes.exists) {
+    add("crawlers", 4, "warn", "robots.txt", "No robots.txt found. Crawlers default to allowed, but an explicit file with a sitemap reference is best practice.", "Use the <b>robots.txt</b> tab in the generator below.");
+    for (const b of AI_BOTS) {
+      add("crawlers", 4, "pass", b.who + " access (" + b.ua + ")", "Not blocked (no robots.txt means allowed by default).", null);
+    }
+  } else {
+    add("crawlers", 4, "pass", "robots.txt", "Found.", null);
+    const robots = parseRobots(robotsRes.text);
+    for (const b of AI_BOTS) {
+      if (botBlocked(robots, b.ua)) {
+        add("crawlers", 4, "fail", b.who + " access (" + b.ua + ")",
+          "Your robots.txt blocks " + b.ua + ", so " + b.who + " cannot read or cite your site.",
+          "Remove the <b>Disallow: /</b> rule for <b>" + b.ua + "</b> (or the * group) in robots.txt.");
+      } else {
+        add("crawlers", 4, "pass", b.who + " access (" + b.ua + ")", "Allowed to crawl your site.", null);
+      }
+    }
+  }
+
+  if (llmsRes.unknown) {
+    add("crawlers", 8, "warn", "llms.txt", "Couldn't verify from this browser.", "Check " + siteOrigin + "/llms.txt manually.");
+  } else if (llmsRes.exists) {
+    add("crawlers", 8, "pass", "llms.txt", "Found — AI tools get a curated summary of your site.", null);
+  } else {
+    add("crawlers", 8, "fail", "llms.txt",
+      "No llms.txt. This emerging standard gives AI systems a clean, curated markdown summary of what your site is and which pages matter.",
+      "Use the <b>llms.txt</b> tab in the generator below — upload the file to your site root.");
+  }
+
+  /* ---- Structured data & indexing (20) ---- */
+  if (page.jsonLd.length > 0) {
+    const types = page.jsonLd.flatMap(j => Array.isArray(j) ? j : [j])
+      .map(j => j["@type"]).filter(Boolean).flat();
+    add("structured", 10, "pass", "JSON-LD structured data",
+      "Found" + (types.length ? " (" + [...new Set(types)].join(", ") + ")" : "") + " — machines can read exactly what your site is.", null);
+  } else {
+    add("structured", 10, "fail", "JSON-LD structured data",
+      "No structured data. Search engines and AI systems rely on JSON-LD to understand your organization, product and pages without guessing.",
+      "Use the <b>JSON-LD</b> tab in the generator below — paste it into your &lt;head&gt;.");
+  }
+
+  if (page.canonical) {
+    add("structured", 5, "pass", "Canonical URL", page.canonical, null);
+  } else {
+    add("structured", 5, "warn", "Canonical URL",
+      "No canonical link. Duplicate URLs (http/https, with/without www, tracking params) can split your ranking signals.",
+      "Add <b>&lt;link rel=\"canonical\" href=\"" + escHtml(siteOrigin) + "/\"&gt;</b> to each page's head (included in the Meta tags tab).");
+  }
+
+  if (sitemapOk === true) {
+    add("structured", 5, "pass", "XML sitemap", "Found — crawlers can discover all your pages.", null);
+  } else if (sitemapOk === null) {
+    add("structured", 5, "warn", "XML sitemap", "Couldn't verify from this browser.", "Check " + siteOrigin + "/sitemap.xml manually.");
+  } else {
+    add("structured", 5, "fail", "XML sitemap",
+      "No sitemap found at /sitemap.xml and none referenced in robots.txt.",
+      "Generate one (most frameworks and CMSs have a plugin/setting) and reference it in robots.txt.");
+  }
+
+  /* ---- Meta & social (25) ---- */
+  const tl = page.title.length;
+  if (!page.title) {
+    add("meta", 6, "fail", "Title tag", "Missing — this is the single most important line for search results.", "Add a &lt;title&gt; of 30–60 characters: what you do + for whom.");
+  } else if (tl < 20 || tl > 65) {
+    add("meta", 6, "warn", "Title tag", `"${trunc(page.title, 70)}" (${tl} chars — aim for 30–60).`, "Rewrite to 30–60 characters; put the most important words first.");
+  } else {
+    add("meta", 6, "pass", "Title tag", `"${trunc(page.title, 70)}" (${tl} chars).`, null);
+  }
+
+  const dl = page.description.length;
+  if (!page.description) {
+    add("meta", 6, "fail", "Meta description", "Missing — search engines and AI previews will improvise one for you, badly.", "Add a 70–160 character description (included in the Meta tags tab).");
+  } else if (dl < 50 || dl > 170) {
+    add("meta", 6, "warn", "Meta description", `${dl} chars — aim for 70–160.`, "Adjust the length; make the first 100 characters carry the message.");
+  } else {
+    add("meta", 6, "pass", "Meta description", `"${trunc(page.description, 90)}"`, null);
+  }
+
+  if (page.ogTitle && page.ogDesc) {
+    add("meta", 5, "pass", "Open Graph tags", "og:title and og:description present — links preview correctly when shared.", null);
+  } else {
+    add("meta", 5, "fail", "Open Graph tags",
+      "Missing og:title / og:description. Your links look broken when shared in chats and on social platforms.",
+      "Add the Open Graph block from the <b>Meta tags</b> tab.");
+  }
+
+  if (page.ogImage) {
+    add("meta", 4, "pass", "Social preview image (og:image)", "Present.", null);
+  } else {
+    add("meta", 4, "warn", "Social preview image (og:image)",
+      "No og:image — shared links show no picture, which cuts click-through sharply.",
+      "Create a 1200×630 image and reference it with og:image.");
+  }
+
+  if (page.twitterCard) {
+    add("meta", 4, "pass", "Twitter/X card", 'twitter:card = "' + page.twitterCard + '".', null);
+  } else {
+    add("meta", 4, "warn", "Twitter/X card", "No twitter:card meta tag.", 'Add <b>&lt;meta name="twitter:card" content="summary_large_image"&gt;</b> (included in the Meta tags tab).');
+  }
+
+  /* ---- Content & technical (23) ---- */
+  if (page.robotsMeta.includes("noindex")) {
+    add("content", 6, "fail", "Indexing allowed", 'Your page has &lt;meta name="robots" content="noindex"&gt; — it is asking to be REMOVED from search results.', "Delete the noindex directive unless this page is intentionally private.");
+  } else {
+    add("content", 6, "pass", "Indexing allowed", "No noindex directive.", null);
+  }
+
+  if (page.h1s.length === 1) {
+    add("content", 4, "pass", "H1 heading", `"${trunc(page.h1s[0], 70)}"`, null);
+  } else if (page.h1s.length === 0) {
+    add("content", 4, "fail", "H1 heading", "No H1 found. The H1 tells crawlers what the page is about.", "Add exactly one &lt;h1&gt; with your core value proposition.");
+  } else {
+    add("content", 4, "warn", "H1 heading", page.h1s.length + " H1 tags found — use exactly one per page.", "Keep one H1; demote the rest to H2.");
+  }
+
+  if (page.https) {
+    add("content", 4, "pass", "HTTPS", "Site served over HTTPS.", null);
+  } else {
+    add("content", 4, "fail", "HTTPS", "Site is not on HTTPS — a direct ranking and trust penalty.", "Enable HTTPS (free via Let's Encrypt or your host's one-click SSL).");
+  }
+
+  if (page.wordCount >= 250) {
+    add("content", 5, "pass", "Content depth", "~" + page.wordCount + " words of crawlable text.", null);
+  } else if (page.wordCount >= 80) {
+    add("content", 5, "warn", "Content depth", "Only ~" + page.wordCount + " words of crawlable text — thin pages rarely get cited.", "Add real substance: what you do, for whom, how it works, FAQs.");
+  } else {
+    add("content", 5, "fail", "Content depth",
+      "Almost no crawlable text (~" + page.wordCount + " words). If your site is a JavaScript app that renders client-side, many AI crawlers see an empty page.",
+      "Server-render or pre-render your pages, and put key copy in plain HTML.");
+  }
+
+  if (page.lang) {
+    add("content", 2, "pass", "Language attribute", 'html lang="' + page.lang + '".', null);
+  } else {
+    add("content", 2, "warn", "Language attribute", "Missing lang attribute on &lt;html&gt;.", 'Add <b>&lt;html lang="en"&gt;</b> (or your language).');
+  }
+
+  if (page.viewport) {
+    add("content", 2, "pass", "Mobile viewport", "Viewport meta present.", null);
+  } else {
+    add("content", 2, "fail", "Mobile viewport", "No viewport meta — mobile ranking suffers.", 'Add <b>&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</b>.');
+  }
+
+  return c;
+}
+
+function scoreChecks(checks) {
+  const val = { pass: 1, warn: 0.5, fail: 0 };
+  let total = 0, got = 0;
+  const perCat = {};
+  for (const ch of checks) {
+    total += ch.weight;
+    got += ch.weight * val[ch.status];
+    if (!perCat[ch.cat]) perCat[ch.cat] = { total: 0, got: 0 };
+    perCat[ch.cat].total += ch.weight;
+    perCat[ch.cat].got += ch.weight * val[ch.status];
+  }
+  return { score: Math.round((got / total) * 100), perCat };
+}
+
+/* ============================================================
+   Scan orchestration
+   ============================================================ */
+let lastScan = null;
+
+async function runScan() {
+  const input = document.getElementById("urlInput");
+  let url = input.value.trim();
+  if (!url) { setStatus("Enter a website URL first.", true); input.focus(); return; }
+  if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+  let origin;
+  try { origin = new URL(url).origin; } catch (_) { setStatus("That doesn't look like a valid URL.", true); return; }
+
+  const btn = document.getElementById("scanBtn");
+  btn.disabled = true;
+  document.getElementById("resultsSection").classList.add("hidden");
+
+  try {
+    setStatus("Fetching page…");
+    const pageRes = await fetchText(url);
+    if (!pageRes.ok) {
+      setStatus("Couldn't fetch that site from the browser (" + pageRes.error + "). The site may block proxies — try again, or check the URL.", true);
+      return;
+    }
+
+    setStatus("Checking robots.txt, llms.txt and sitemap…");
+    const [robotsRes, llmsRes, sitemapRes] = await Promise.all([
+      fetchPlainFile(origin + "/robots.txt"),
+      fetchPlainFile(origin + "/llms.txt"),
+      fetchText(origin + "/sitemap.xml", { timeout: 12000 }),
+    ]);
+
+    let sitemapOk = false;
+    if (sitemapRes.ok && /<(urlset|sitemapindex)/i.test(sitemapRes.text)) sitemapOk = true;
+    else if (robotsRes.exists && parseRobots(robotsRes.text).sitemaps.length) sitemapOk = true;
+    else if (!sitemapRes.ok && robotsRes.unknown) sitemapOk = null; // network blind spot
+
+    setStatus("Analyzing…");
+    const doc = new DOMParser().parseFromString(pageRes.text, "text/html");
+    const page = analyzeDoc(doc, url);
+    const checks = buildChecks(page, robotsRes, llmsRes, sitemapOk, origin);
+    const { score, perCat } = scoreChecks(checks);
+
+    lastScan = { url, origin, page };
+    prefillGenerator(page, origin);
+    renderResults(url, score, perCat, checks);
+    setStatus("");
+  } catch (e) {
+    setStatus("Scan failed: " + (e.message || e), true);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function setStatus(msg, isError) {
+  const el = document.getElementById("statusLine");
+  el.className = "status-line" + (isError ? " error" : "");
+  el.innerHTML = msg && !isError ? '<span class="spinner"></span>' + escHtml(msg) : escHtml(msg);
+}
+
+/* ============================================================
+   Rendering
+   ============================================================ */
+function renderResults(url, score, perCat, checks) {
+  const section = document.getElementById("resultsSection");
+  section.classList.remove("hidden");
+
+  document.getElementById("scannedUrl").textContent = url;
+  const verdict = document.getElementById("verdict");
+  verdict.textContent =
+    score >= 85 ? "Excellent — AI systems can read you clearly." :
+    score >= 65 ? "Good foundation — a few fixes from great." :
+    score >= 40 ? "Partially visible — you're leaving traffic on the table." :
+                  "Nearly invisible to AI — big wins available.";
+
+  // Ring animation
+  const circ = 2 * Math.PI * 88;
+  const ring = document.getElementById("ringFg");
+  ring.style.strokeDashoffset = circ;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    ring.style.strokeDashoffset = circ * (1 - score / 100);
+  }));
+  animateNumber(document.getElementById("ringScore"), score, 1000);
+
+  // Category bars
+  const bars = document.getElementById("catBars");
+  bars.innerHTML = "";
+  for (const [key, label] of Object.entries(CATS)) {
+    const d = perCat[key];
+    if (!d) continue;
+    const pct = Math.round((d.got / d.total) * 100);
+    const row = document.createElement("div");
+    row.className = "cat-row";
+    row.innerHTML = `<div class="cat-head"><span>${label}</span><span class="pct">${pct}%</span></div>
+                     <div class="cat-bar"><div class="cat-fill"></div></div>`;
+    bars.appendChild(row);
+    const fill = row.querySelector(".cat-fill");
+    requestAnimationFrame(() => requestAnimationFrame(() => { fill.style.width = pct + "%"; }));
+  }
+
+  // Checks grouped by category, fails first within each group
+  const container = document.getElementById("checksContainer");
+  container.innerHTML = "";
+  const order = { fail: 0, warn: 1, pass: 2 };
+  for (const [key, label] of Object.entries(CATS)) {
+    const items = checks.filter(ch => ch.cat === key).sort((a, b) => order[a.status] - order[b.status]);
+    if (!items.length) continue;
+    const group = document.createElement("div");
+    group.className = "cat-group";
+    group.innerHTML = "<h3>" + label + "</h3>";
+    for (const ch of items) {
+      const icon = ch.status === "pass" ? "✓" : ch.status === "warn" ? "!" : "✕";
+      const div = document.createElement("div");
+      div.className = "check " + ch.status;
+      div.innerHTML = `<div class="check-icon">${icon}</div>
+        <div class="check-body">
+          <div class="check-label">${escHtml(ch.label)}</div>
+          <div class="check-detail">${ch.detail}</div>
+          ${ch.fix ? '<div class="check-fix"><b>Fix:</b> ' + ch.fix + "</div>" : ""}
+        </div>`;
+      group.appendChild(div);
+    }
+    container.appendChild(group);
+  }
+
+  section.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function animateNumber(el, target, dur) {
+  const start = performance.now();
+  function tick(now) {
+    const p = Math.min((now - start) / dur, 1);
+    el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+    if (p < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+/* ============================================================
+   Generator
+   ============================================================ */
+function prefillGenerator(page, origin) {
+  const set = (id, v) => { const el = document.getElementById(id); if (v && !el.value.trim()) el.value = v; };
+  set("gUrl", origin);
+  set("gName", page.ogTitle || (page.title ? page.title.split(/[|\-–—:]/)[0].trim() : ""));
+  set("gDesc", page.description || page.ogDesc);
+}
+
+const GEN_TABS = [
+  { id: "llms",   label: "llms.txt",   file: "llms.txt",
+    hint: "<b>Where it goes:</b> upload to your site root so it's reachable at <b>yoursite.com/llms.txt</b>. This is the curated summary AI tools read first." },
+  { id: "jsonld", label: "JSON-LD",    file: "structured-data.html",
+    hint: "<b>Where it goes:</b> paste this &lt;script&gt; block inside the &lt;head&gt; of your homepage. Validate at search.google.com/test/rich-results." },
+  { id: "meta",   label: "Meta tags",  file: "meta-tags.html",
+    hint: "<b>Where it goes:</b> inside the &lt;head&gt; of every page (adjust title/description per page). Replace any existing duplicates." },
+  { id: "robots", label: "robots.txt", file: "robots.txt",
+    hint: "<b>Where it goes:</b> upload to your site root as <b>yoursite.com/robots.txt</b>. It explicitly welcomes AI crawlers and points to your sitemap." },
+];
+let genData = {}, activeTab = "llms";
+
+function getPages() {
+  return document.getElementById("gPages").value.split("\n").map(l => {
+    const parts = l.split("|").map(s => s.trim());
+    if (!parts[0]) return null;
+    return { title: parts[0], path: parts[1] || "/", desc: parts[2] || "" };
+  }).filter(Boolean);
+}
+
+function generateAll() {
+  const name = document.getElementById("gName").value.trim() || "My Site";
+  let url = document.getElementById("gUrl").value.trim() || "https://example.com";
+  if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+  url = url.replace(/\/+$/, "");
+  const desc = document.getElementById("gDesc").value.trim() || "Describe what your site does here.";
+  const email = document.getElementById("gEmail").value.trim();
+  const social = document.getElementById("gSocial").value.split(",").map(s => s.trim()).filter(Boolean);
+  const pages = getPages();
+
+  /* ----- llms.txt (llmstxt.org format) ----- */
+  let llms = `# ${name}\n\n> ${desc}\n`;
+  if (pages.length) {
+    llms += `\n## Key pages\n\n`;
+    for (const p of pages) {
+      const full = p.path.startsWith("http") ? p.path : url + (p.path.startsWith("/") ? p.path : "/" + p.path);
+      llms += `- [${p.title}](${full})${p.desc ? ": " + p.desc : ""}\n`;
+    }
+  }
+  llms += `\n## About\n\n- [Homepage](${url}): ${desc}\n`;
+  if (email) llms += `- Contact: ${email}\n`;
+
+  /* ----- JSON-LD ----- */
+  const org = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": name,
+    "url": url,
+    "description": desc,
+  };
+  if (email) org.email = email;
+  if (social.length) org.sameAs = social;
+  const website = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": name,
+    "url": url,
+    "description": desc,
+  };
+  const jsonld =
+`<script type="application/ld+json">
+${JSON.stringify(org, null, 2)}
+<\/script>
+<script type="application/ld+json">
+${JSON.stringify(website, null, 2)}
+<\/script>`;
+
+  /* ----- Meta tags ----- */
+  const metaTitle = name.length <= 45 ? `${name} — ${trunc(desc, 55 - name.length)}` : name;
+  const metaDesc = trunc(desc, 158);
+  const metaPack =
+`<!-- Primary meta -->
+<title>${escHtml(metaTitle)}</title>
+<meta name="description" content="${escHtml(metaDesc)}">
+<link rel="canonical" href="${url}/">
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph (social & chat link previews) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="${escHtml(name)}">
+<meta property="og:title" content="${escHtml(metaTitle)}">
+<meta property="og:description" content="${escHtml(metaDesc)}">
+<meta property="og:url" content="${url}/">
+<meta property="og:image" content="${url}/og-image.png">
+<!-- ^ create a 1200x630 image and upload it as /og-image.png -->
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${escHtml(metaTitle)}">
+<meta name="twitter:description" content="${escHtml(metaDesc)}">
+<meta name="twitter:image" content="${url}/og-image.png">`;
+
+  /* ----- robots.txt ----- */
+  const robots =
+`# robots.txt for ${url}
+# Welcomes search engines and AI crawlers.
+
+User-agent: *
+Allow: /
+
+# AI assistant crawlers — explicitly allowed so AI tools can read & cite you
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+Sitemap: ${url}/sitemap.xml`;
+
+  genData = { llms, jsonld, meta: metaPack, robots };
+
+  // Render tabs
+  const tabsEl = document.getElementById("genTabs");
+  tabsEl.innerHTML = "";
+  for (const t of GEN_TABS) {
+    const b = document.createElement("button");
+    b.className = "tab" + (t.id === activeTab ? " active" : "");
+    b.textContent = t.label;
+    b.onclick = () => { activeTab = t.id; showTab(); };
+    tabsEl.appendChild(b);
+  }
+  document.getElementById("genOutputs").classList.remove("hidden");
+  showTab();
+}
+
+function showTab() {
+  const t = GEN_TABS.find(x => x.id === activeTab);
+  document.querySelectorAll("#genTabs .tab").forEach((b, i) =>
+    b.classList.toggle("active", GEN_TABS[i].id === activeTab));
+  document.getElementById("outputPre").textContent = genData[activeTab] || "";
+  document.getElementById("outputHint").innerHTML = t.hint;
+}
+
+function copyOutput() {
+  const text = genData[activeTab] || "";
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById("copyBtn");
+    btn.textContent = "Copied ✓";
+    btn.classList.add("copy-ok");
+    setTimeout(() => { btn.textContent = "Copy"; btn.classList.remove("copy-ok"); }, 1600);
+  });
+}
+
+function downloadOutput() {
+  const t = GEN_TABS.find(x => x.id === activeTab);
+  const blob = new Blob([genData[activeTab] || ""], { type: "text/plain" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = t.file;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+/* ============================================================
+   Utils
+   ============================================================ */
+function escHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, ch =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+}
+function trunc(s, n) { return s.length > n ? s.slice(0, n - 1).trimEnd() + "…" : s; }
+</script>
+</body>
+</html>
